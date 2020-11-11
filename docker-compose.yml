@@ -1,0 +1,42 @@
+version: '3.4'
+
+services:
+  api-gateway:
+    image: api-gateway
+    container_name: api-gateway
+    restart: always
+    ports:
+      - 81:80
+      - 443:443
+    build:
+      context: ./WebAppServiceForHotel/.
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=1111
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+      - ~/.aspnet/https:/https:ro
+
+  authorization-service:
+    image: authorization-service
+    container_name: authorization-service
+    restart: always
+    ports:
+      - 82:80
+      - 444:443
+    build:
+      context: ./Authorization/.
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=1111
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+      - ~/.aspnet/https:/https:ro
+  test:
+    image: test
+    container_name: test
+    restart: always
+    build:
+      context: ./test1/.
