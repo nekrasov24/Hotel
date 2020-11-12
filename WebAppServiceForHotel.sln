@@ -11,7 +11,7 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "test1", "test1\test1.csproj", "{0DC2E14B-E3C6-4E0D-9556-919FB61287C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User Service", "..\User Service\User Service.csproj", "{A1631951-6BDA-4D96-BA03-A7A7D0868896}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "..\User Service\UserService.csproj", "{A1631951-6BDA-4D96-BA03-A7A7D0868896}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "..\Entities\Entities.csproj", "{FAE27B7A-9728-4D3E-860C-8C3763A3B454}"
 EndProject
