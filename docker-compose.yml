@@ -2,12 +2,12 @@ version: '3.4'
 
 services:
   api-gateway:
-    image: api-gateway
+    image: api-gateway:latest
     container_name: api-gateway
     restart: always
     ports:
       - 81:80
-      - 443:443
+      - 44344:443
     build:
       context: ./WebAppServiceForHotel/.
     environment:
@@ -19,12 +19,12 @@ services:
       - ~/.aspnet/https:/https:ro
 
   authorization-service:
-    image: authorization-service
+    image: authorization-service:latest
     container_name: authorization-service
     restart: always
     ports:
       - 82:80
-      - 444:443
+      - 4443:443
     build:
       context: ./Authorization/.
     environment:

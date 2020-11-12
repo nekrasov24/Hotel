@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/{everything}",
+      "DownstreamPathTemplate": "/weatherforecast",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -9,21 +9,7 @@
           "Port": 443
         }
       ],
-      "UpstreamPathTemplate": "/{everything}",
-      "UpstreamHttpMethod": [ "Get" ],
-      "ReRoutesCaseSensitive": false,
-      "DangerousAcceptAnyServerCertificateValidator": true
-    },
-    {
-      "DownstreamPathTemplate": "/weatherforecast",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "test",
-          "Port": 81
-        }
-      ],
-      "UpstreamPathTemplate": "/hello",
+      "UpstreamPathTemplate": "/weatherforecast",
       "UpstreamHttpMethod": [ "Get" ],
       "ReRoutesCaseSensitive": false,
       "DangerousAcceptAnyServerCertificateValidator": true

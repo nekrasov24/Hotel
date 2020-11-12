@@ -43,18 +43,11 @@ namespace Authorization
 
             app.UseAuthorization();
 
-            app.UseEndpoints(
-                endpoints =>
-                {
-                    endpoints.MapGet(
-                        "/",
-                        async context =>
-                        {
-                            await context.Response.WriteAsync("SERVICE 1! FIRST AHOE IN THE CITY!");
-                        }
-                    );
-                }
-            );
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+
         }
     }
 }
