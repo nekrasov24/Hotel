@@ -14,7 +14,7 @@ namespace Authorization.Controllers
         [HttpGet("authorization")]
         public string Message()
         {
-            return "hello";
+            return "hello world";
         }
     }
 }
