@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using WebAppServiceForHotel.UserService;
 
 namespace WebAppServiceForHotel
 {
@@ -28,6 +29,7 @@ namespace WebAppServiceForHotel
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddScoped<IUserService, UserService.UserService>();
             services.AddOcelot(Configuration);
         }
 
