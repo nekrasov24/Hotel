@@ -8,7 +8,7 @@ namespace WebAppServiceForHotel.UserService
 {
     public interface IUserService
     {
-        AuthenticateResponse Register(RegistrationRequest model);
+        string Register(RegistrationRequest model);
         AuthenticateResponse Authenticate(AuthenticateRequest model);
         //string GenerateJwtToken(User user);
     }

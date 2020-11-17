@@ -1,12 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace DAL
+namespace WebAppServiceForHotel.DAL
 {
     public class UserContext : DbContext
     {
         public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
+        public UserContext(DbContextOptions<UserContext> options) : base(options)
+        {
+
+        }
+
     }
 }

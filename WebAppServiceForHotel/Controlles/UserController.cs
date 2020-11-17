@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebAppServiceForHotel.UserService;
@@ -17,7 +18,8 @@ namespace WebAppServiceForHotel.Controlles
         {
             _userService = userService;
         }
-        public IActionResult Authenticate(AuthenticateRequest model)
+        [HttpPost("authenticate")]
+        public IActionResult Authenticate([FromBody] AuthenticateRequest model)
         {
             try
             {
@@ -32,14 +34,15 @@ namespace WebAppServiceForHotel.Controlles
             }
 
         }
-        public IActionResult Register(RegistrationRequest model)
+        [HttpPost("/register")]
+        public IActionResult Register([FromBody] RegistrationRequest model)
         {
             try
             {
                 var response = _userService.Register(model);
                 if (response == null)
                     return BadRequest(new { message = "User already exists" });
-                return Ok();
+                return Ok(response);
             }
             catch
             {

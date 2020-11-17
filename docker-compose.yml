@@ -40,3 +40,13 @@ services:
     restart: always
     build:
       context: ./test1/.
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: dbUserService
+    restart: always
+    environment:
+       SA_PASSWORD: "Your_password123"
+       ACCEPT_EULA: "Y"
+       MSSQL_PID: "Express"
+    ports:
+      - 14332:1433

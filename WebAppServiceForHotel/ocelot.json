@@ -12,7 +12,11 @@
       "UpstreamPathTemplate": "/weatherforecast",
       "UpstreamHttpMethod": [ "Get" ],
       "ReRoutesCaseSensitive": false,
-      "DangerousAcceptAnyServerCertificateValidator": true
-    }
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+        "DangerousAcceptAnyServerCertificateValidator": true
+      }    
   ]
 }

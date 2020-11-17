@@ -1,12 +1,13 @@
 ﻿
-using DAL;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using WebAppServiceForHotel.DAL;
 
-namespace UserRepository
+namespace WebAppServiceForHotel.UserRepository
 {
     public class UserRepository : IUserRepository
     {
@@ -34,6 +35,11 @@ namespace UserRepository
         public User GetUser()
         {
             return _userContext.Users.FirstOrDefault();
+        }
+
+        public int SaveChanges()
+        {
+            return _userContext.SaveChanges();
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿
-using DAL;
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using WebAppServiceForHotel.DAL;
 
-namespace UserRepository
+namespace WebAppServiceForHotel.UserRepository
 {
     public interface IUserRepository
     {
@@ -13,5 +14,6 @@ namespace UserRepository
         IEnumerable<User> GetAll();
         void UpdateUser(User user);
         User GetUser();
+        int SaveChanges();
     }
 }
