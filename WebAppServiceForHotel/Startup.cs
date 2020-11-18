@@ -16,10 +16,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using WebAppServiceForHotel.DAL;
-using WebAppServiceForHotel.UserRepository;
-using WebAppServiceForHotel.UserService;
-
 namespace WebAppServiceForHotel
 {
     public class Startup
@@ -34,11 +30,6 @@ namespace WebAppServiceForHotel
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<UserContext>(options => options.UseSqlServer(connection));
-            services.AddControllers();
-            services.AddScoped<IUserService, UserService.UserService>();
-            services.AddScoped<IUserRepository, UserRepository.UserRepository>();
 
             var authenticationProviderKey = "Bearer";
             services.AddAuthentication().AddJwtBearer(authenticationProviderKey, options => {
@@ -66,15 +57,10 @@ namespace WebAppServiceForHotel
 
             app.UseHttpsRedirection();
 
-            app.UseRouting();
+            //app.UseRouting();
 
             app.UseAuthorization();
             app.UseAuthentication();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
 
             app.UseOcelot().Wait();
         }

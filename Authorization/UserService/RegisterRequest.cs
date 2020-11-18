@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebAppServiceForHotel.UserService
+namespace Authorization.UserService
 {
-    public class RegistrationRequest
+    public class RegisterRequest
     {
         [Required]
         public string FirstName { get; set; }

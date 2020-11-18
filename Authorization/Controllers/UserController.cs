@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using Authorization.UserService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using WebAppServiceForHotel.UserService;
 
-namespace WebAppServiceForHotel.Controlles
+namespace Authorization.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -34,8 +33,25 @@ namespace WebAppServiceForHotel.Controlles
             }
 
         }
-        [HttpPost("/register")]
-        public IActionResult Register([FromBody] RegistrationRequest model)
+
+        [HttpPost("/logout")]
+        public IActionResult Logout([FromBody] RegisterRequest model)
+        {
+            try
+            {
+                var response = _userService.Register(model);
+                if (response == null)
+                    return BadRequest(new { message = "User already exists or Email or password is incorrect" });
+                return Ok(response);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] RegisterRequest model)
         {
             try
             {

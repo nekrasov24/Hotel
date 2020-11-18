@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace WebAppServiceForHotel.Migrations
+namespace Authorization.Migrations
 {
-    public partial class IntialCreate : Migration
+    public partial class CreateDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,11 +12,11 @@ namespace WebAppServiceForHotel.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    DateOfBirth = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(maxLength: 100, nullable: true),
+                    LastName = table.Column<string>(maxLength: 100, nullable: true),
+                    DateOfBirth = table.Column<DateTime>(maxLength: 100, nullable: true),
+                    Email = table.Column<string>(maxLength: 100, nullable: true),
+                    Password = table.Column<string>(maxLength: 100, nullable: true),
                     Roles = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

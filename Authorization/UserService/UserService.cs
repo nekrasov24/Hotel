@@ -1,8 +1,6 @@
-﻿
-
-
+﻿using Authorization.Dal;
+using Authorization.UserRepository;
 using Elskom.Generic.Libs;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -12,10 +10,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using WebAppServiceForHotel.DAL;
-using WebAppServiceForHotel.UserRepository;
 
-namespace WebAppServiceForHotel.UserService
+namespace Authorization.UserService
 {
     public class UserService : IUserService
     {
@@ -26,13 +22,34 @@ namespace WebAppServiceForHotel.UserService
             _userRepository = userRepository;
             _configuration = configuration;
         }
-        public string Register(RegistrationRequest model)
+        public string Register(RegisterRequest model)
         {
             try
             {
+                if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.FirstName))
+                    return null;
+                var adminEmail = "admin@gmail.com";
+                var adminFirstName = "admin22";
+                if (model.Email == adminEmail && model.Password == adminFirstName)
+                {
+                    var newAdminUser = new User()
+                    {
+                        Id = Guid.NewGuid(),
+                        Password = Encrypt(adminFirstName),
+                        Email = adminEmail,
+                        Roles = Roles.Admin,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        DateOfBirth = model.DateOfBirth
+                    };
+                    _userRepository.AddUser(newAdminUser);
+                    _userRepository.SaveChanges();
+                    var adminToken = GenerateJwtToken(newAdminUser);
+                    return adminToken;
+                }
                 var findUser = _userRepository.GetAll();
-                var user = findUser.FirstOrDefault(u => u.Email == model.Email && u.Password == model.Password);
-                //if (user != null) return null;
+                var user = findUser.FirstOrDefault(u => u.Email == model.Email && u.FirstName == model.FirstName);
+                if (user != null) return null;
                 var newUser = new User()
                 {
                     Id = Guid.NewGuid(),
@@ -42,7 +59,7 @@ namespace WebAppServiceForHotel.UserService
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     DateOfBirth = model.DateOfBirth
-                }; 
+                };
                 _userRepository.AddUser(newUser);
                 _userRepository.SaveChanges();
                 var token = GenerateJwtToken(newUser);
@@ -53,14 +70,14 @@ namespace WebAppServiceForHotel.UserService
                 throw;
             }
         }
-        public string RegisterAdmin(RegistrationRequest model)
+        public string RegisterAdmin(RegisterRequest model)
         {
             try
             {
                 var adminEmail = "admin@gmail.com";
                 var adminPassword = "admin22";
                 var findUser = _userRepository.GetAll();
-                var user = findUser.FirstOrDefault(u => u.Email == model.Email && u.Password == model.Password);
+                var user = findUser.FirstOrDefault(u => u.Email == model.Email && u.FirstName == model.FirstName);
                 if (user != null) return null;
 
                 var newUser = new User()
@@ -82,15 +99,17 @@ namespace WebAppServiceForHotel.UserService
                 throw;
             }
         }
-        public AuthenticateResponse Authenticate(AuthenticateRequest model)
+        public string Authenticate(AuthenticateRequest model)
         {
             try
             {
+                if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Email))                
+                return null;    
                 var findUser = _userRepository.GetAll();
-                var user = findUser.FirstOrDefault(u => u.Email == model.Email && u.Password == model.Password);
+                var user = findUser.FirstOrDefault(u => u.Email == model.Email && u.FirstName == model.FirstName);
                 if (user == null) return null;
                 var token = GenerateJwtToken(user);
-                return new AuthenticateResponse(user, token);
+                return token;
             }
             catch
             {
@@ -120,10 +139,10 @@ namespace WebAppServiceForHotel.UserService
 
         private string Encrypt(string password)
         {
-            var cryptKey = "80";
-            BlowFish blow = new BlowFish(cryptKey);
-            string encrypt = blow.EncryptCBC(password);
-            return password;
+            
+            string salt = BCrypt.Net.BCrypt.GenerateSalt();
+            string hash = BCrypt.Net.BCrypt.HashPassword(password, salt);
+            return hash;
         }
     }
 }

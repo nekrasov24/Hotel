@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace WebAppServiceForHotel.DAL
+namespace Authorization.Dal
 {
     public class UserContext : DbContext
     {
@@ -10,6 +13,5 @@ namespace WebAppServiceForHotel.DAL
         {
 
         }
-
     }
 }

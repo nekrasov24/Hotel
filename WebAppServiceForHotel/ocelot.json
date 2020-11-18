@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/weatherforecast",
+      "DownstreamPathTemplate": "/api/user/{else}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -9,14 +9,10 @@
           "Port": 443
         }
       ],
-      "UpstreamPathTemplate": "/weatherforecast",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamPathTemplate": "/api/{else}",
+      "UpstreamHttpMethod": [ "Post" ],
       "ReRoutesCaseSensitive": false,
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
-        "DangerousAcceptAnyServerCertificateValidator": true
-      }    
+      "DangerousAcceptAnyServerCertificateValidator": true
+    }
   ]
 }

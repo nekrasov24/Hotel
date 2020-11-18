@@ -1,12 +1,10 @@
-﻿
-
+﻿using Authorization.Dal;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
-using WebAppServiceForHotel.DAL;
 
-namespace WebAppServiceForHotel.UserRepository
+namespace Authorization.UserRepository
 {
     public interface IUserRepository
     {
