@@ -59,7 +59,7 @@
       "UpstreamHttpMethod": [ "Get" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
+        "AllowedScopes": ["Admin"]
       },
       "ReRoutesCaseSensitive": false,
       "DangerousAcceptAnyServerCertificateValidator": true

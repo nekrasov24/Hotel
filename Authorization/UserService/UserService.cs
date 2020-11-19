@@ -101,7 +101,8 @@ namespace Authorization.UserService
             var claims = new[] {
             new Claim(JwtRegisteredClaimNames.Sub, userInfo.FirstName),
             new Claim(JwtRegisteredClaimNames.Email, userInfo.Email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(ClaimTypes.Role, userInfo.Roles.ToString())
             };
 
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],

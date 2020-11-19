@@ -11,10 +11,10 @@ namespace Authorization.UserService
         [Required]
         public string FirstName { get; set; }
         [Required]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "Email is not valid+")]
         public string Email { get; set; }
         [Required]
+        [StringLength(30, ErrorMessage = "Password is required", MinimumLength = 4)]
         public string Password { get; set; }
-
     }
 }

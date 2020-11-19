@@ -8,6 +8,7 @@ namespace Authorization.Dal
 {
     public class User
     {
+        [Key]
         public Guid Id { get; set; }
         [StringLength(100)]
         public string FirstName { get; set; }
@@ -16,6 +17,7 @@ namespace Authorization.Dal
         [StringLength(100)]
         public DateTime? DateOfBirth { get; set; }
         [StringLength(100)]
+        [EmailAddress]
         public string Email { get; set; }
         [StringLength(100)]
         public string Password { get; set; }

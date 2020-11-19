@@ -19,7 +19,7 @@ namespace Authorization.UserRepository
 
         public async Task AddUserAsync(User user)
         {
-            await _userContext.Users.AddAsync(user);
+            _userContext.Users.Add(user);
             await SaveChangeAsync();
         }
 
@@ -28,19 +28,10 @@ namespace Authorization.UserRepository
             return _userContext.Users.ToArray();
         }
 
-        public void UpdateUser(User user)
+        public async Task UpdateUser(User user)
         {
             _userContext.Users.Update(user);
-        }
-
-        public User GetUser()
-        {
-            return _userContext.Users.FirstOrDefault();
-        }
-
-        public void SaveChanges()
-        {
-             _userContext.SaveChanges();
+            await SaveChangeAsync();
         }
         public async Task SaveChangeAsync()
         {
