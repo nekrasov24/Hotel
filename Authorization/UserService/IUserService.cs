@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Authorization.Dal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,8 +8,10 @@ namespace Authorization.UserService
 {
     public interface IUserService
     {
-        string Register(RegisterRequest model);
-        string Authenticate(AuthenticateRequest model);
+        Task<string> Register(RegisterRequest model);
+        string RegisterAdmin(RegisterRequest model);
+        Task<string> Authenticate(AuthenticateRequest model);
         //string GenerateJwtToken(User user);
+        public IEnumerable<User> GetUsers();
     }
 }

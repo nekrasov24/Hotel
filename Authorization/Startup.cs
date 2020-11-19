@@ -41,8 +41,23 @@ namespace Authorization
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserContext userContext, IUserService service)
         {
+            userContext.Database.Migrate();
+
+            if (userContext.Users.All(x => x.Roles != Roles.Admin))
+            {
+                service.RegisterAdmin(new RegisterRequest()
+                {
+                    FirstName = "Dmitry", LastName = "Nekrasov",
+                    Email = "d.a.04nekrasovgmail.com",
+                    DateOfBirth = new DateTime(1992, 10, 04),
+                    Password = "Nekrasov22Nekrasov",
+                    PasswordConfirm = "Nekrasov22Nekrasov"
+                });
+
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

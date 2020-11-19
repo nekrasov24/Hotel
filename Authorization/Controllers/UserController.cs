@@ -18,11 +18,11 @@ namespace Authorization.Controllers
             _userService = userService;
         }
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody] AuthenticateRequest model)
+        public async Task<IActionResult> Authenticate([FromBody] AuthenticateRequest model)
         {
             try
             {
-                var response = _userService.Authenticate(model);
+                var response = await _userService.Authenticate(model);
                 if (response == null)
                     return BadRequest(new { message = "Email or password is incorrect" });
                 return Ok(response);
@@ -34,28 +34,13 @@ namespace Authorization.Controllers
 
         }
 
-        [HttpPost("/logout")]
-        public IActionResult Logout([FromBody] RegisterRequest model)
-        {
-            try
-            {
-                var response = _userService.Register(model);
-                if (response == null)
-                    return BadRequest(new { message = "User already exists or Email or password is incorrect" });
-                return Ok(response);
-            }
-            catch
-            {
-                throw;
-            }
-        }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] RegisterRequest model)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest model)
         {
             try
             {
-                var response = _userService.Register(model);
+                var response = await _userService.Register(model);
                 if (response == null)
                     return BadRequest(new { message = "User already exists" });
                 return Ok(response);
@@ -64,6 +49,12 @@ namespace Authorization.Controllers
             {
                 throw;
             }
+        }
+        [HttpGet("getUsers")]
+        public IActionResult Get()
+        {
+            var obUsers = _userService.GetUsers();
+            return Ok(obUsers);
         }
     }
 }

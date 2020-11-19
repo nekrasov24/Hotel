@@ -22,35 +22,15 @@ namespace Authorization.UserService
             _userRepository = userRepository;
             _configuration = configuration;
         }
-        public string Register(RegisterRequest model)
+        public async Task<string> Register(RegisterRequest model)
         {
             try
             {
-                if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.FirstName))
+                if (string.IsNullOrWhiteSpace(model.Email))
                     return null;
-                var adminEmail = "admin@gmail.com";
-                var adminFirstName = "admin22";
-                if (model.Email == adminEmail && model.Password == adminFirstName)
-                {
-                    var newAdminUser = new User()
-                    {
-                        Id = Guid.NewGuid(),
-                        Password = Encrypt(adminFirstName),
-                        Email = adminEmail,
-                        Roles = Roles.Admin,
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        DateOfBirth = model.DateOfBirth
-                    };
-                    _userRepository.AddUser(newAdminUser);
-                    _userRepository.SaveChanges();
-                    var adminToken = GenerateJwtToken(newAdminUser);
-                    return adminToken;
-                }
-                var findUser = _userRepository.GetAll();
-                var user = findUser.FirstOrDefault(u => u.Email == model.Email && u.FirstName == model.FirstName);
+                var user = (await _userRepository.GetAllAsync(u => u.Email.ToUpper().Equals(model.Email.ToUpper()))).FirstOrDefault();
                 if (user != null) return null;
-                var newUser = new User()
+                var newUser = new User
                 {
                     Id = Guid.NewGuid(),
                     Password = Encrypt(model.Password),
@@ -60,8 +40,8 @@ namespace Authorization.UserService
                     LastName = model.LastName,
                     DateOfBirth = model.DateOfBirth
                 };
-                _userRepository.AddUser(newUser);
-                _userRepository.SaveChanges();
+
+                await _userRepository.AddUserAsync(newUser);
                 var token = GenerateJwtToken(newUser);
                 return token;
             }
@@ -74,23 +54,18 @@ namespace Authorization.UserService
         {
             try
             {
-                var adminEmail = "admin@gmail.com";
-                var adminPassword = "admin22";
-                var findUser = _userRepository.GetAll();
-                var user = findUser.FirstOrDefault(u => u.Email == model.Email && u.FirstName == model.FirstName);
-                if (user != null) return null;
 
                 var newUser = new User()
                 {
                     Id = Guid.NewGuid(),
-                    Password = Encrypt(adminPassword),
-                    Email = adminEmail,
+                    Password = Encrypt(model.Password),
+                    Email = model.Email,
                     Roles = Roles.Admin,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     DateOfBirth = model.DateOfBirth
                 };
-                _userRepository.AddUser(newUser);
+                _userRepository.AddUserAsync(newUser);
                 var token = GenerateJwtToken(newUser);
                 return token;
             }
@@ -99,15 +74,16 @@ namespace Authorization.UserService
                 throw;
             }
         }
-        public string Authenticate(AuthenticateRequest model)
+        public async Task<string> Authenticate(AuthenticateRequest model)
         {
             try
             {
-                if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Email))                
-                return null;    
-                var findUser = _userRepository.GetAll();
-                var user = findUser.FirstOrDefault(u => u.Email == model.Email && u.FirstName == model.FirstName);
+                if (string.IsNullOrWhiteSpace(model.Email))
+                    return null;
+                var user = (await _userRepository.GetAllAsync(u => u.Email.ToUpper().Equals(model.Email.ToUpper()))).FirstOrDefault();
                 if (user == null) return null;
+                var verified = BCrypt.Net.BCrypt.Verify(model.Password, user.Password);
+                if (!verified) return null;
                 var token = GenerateJwtToken(user);
                 return token;
             }
@@ -139,10 +115,16 @@ namespace Authorization.UserService
 
         private string Encrypt(string password)
         {
-            
+
             string salt = BCrypt.Net.BCrypt.GenerateSalt();
             string hash = BCrypt.Net.BCrypt.HashPassword(password, salt);
             return hash;
+        }
+
+        public IEnumerable<User> GetUsers()
+        {
+            var getUsers = _userRepository.GetAllUsers();
+            return getUsers;
         }
     }
 }
