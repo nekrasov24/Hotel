@@ -45,6 +45,7 @@ namespace WebAppServiceForHotel
                 };
             });
             services.AddOcelot(Configuration);
+            services.AddCors(options => options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,7 +59,7 @@ namespace WebAppServiceForHotel
             app.UseHttpsRedirection();
 
             //app.UseRouting();
-
+            app.UseCors();
             app.UseAuthorization();
             app.UseAuthentication();
 
