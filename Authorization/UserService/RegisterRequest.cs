@@ -8,23 +8,22 @@ namespace Authorization.UserService
 {
     public class RegisterRequest
     {
-        [Required]
+        [Required(ErrorMessage = "First Name is required")]
         public string FirstName { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Last Name is required")]
         public string LastName { get; set; }
-        [Required]
-        [EmailAddress(ErrorMessage = "Email is required")]
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Email is incorrect")]
         public string Email { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Date of Birth is required")]
         [DataType(DataType.DateTime)]
         public DateTime DateOfBirth { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
-        [StringLength(30, ErrorMessage = "Password is required", MinimumLength = 4)]
+        [StringLength(30, ErrorMessage = "Password is short", MinimumLength = 4)]
         public string Password { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
-        [StringLength(30, ErrorMessage = "Password isn't confirm", MinimumLength = 4)]
         [Compare("Password", ErrorMessage = "Passwords don't match")]
         public string PasswordConfirm { get; set; }
 
