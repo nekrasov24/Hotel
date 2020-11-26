@@ -8,7 +8,7 @@ namespace Authorization.UserService
 {
     public class AuthenticateRequest
     {
-        [Required]
+        [Required(ErrorMessage = "First Name is required")]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Email is incorrect")]
