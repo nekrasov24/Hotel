@@ -30,8 +30,7 @@ namespace Authorization.UserService
                     return null;
                 var user = (await _userRepository.GetAllAsync(u => u.Email.ToUpper().Equals(model.Email.ToUpper()))).FirstOrDefault();
                 if (user != null) return null;
-                var verified = BCrypt.Net.BCrypt.Verify(model.Password, user.Password);
-                if (!verified) return null;
+                
                 var newUser = new User
                 {
                     Id = Guid.NewGuid(),
