@@ -11,9 +11,8 @@ namespace Authorization.UserService
         [Required(ErrorMessage = "First Name is required")]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Email is incorrect")]
-        //[RegularExpression("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")]
-        //[RegularExpression("^([a-zA-Z][\\w\\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]){1,70}$")]
+
+        //[RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$")]
         public string Email { get; set; }
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]

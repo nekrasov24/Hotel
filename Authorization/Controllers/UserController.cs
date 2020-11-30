@@ -23,13 +23,16 @@ namespace Authorization.Controllers
             try
             {
                 var response = await _userService.Authenticate(model);
-                if (response == null)
-                    return BadRequest(new { message = "Email or password is incorrect" });
+                       
                 return Ok(response);
             }
-            catch
+            catch(AuthenticateException ex)
             {
-                throw;
+                return BadRequest(ex.Message);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message/*"Something went wrong"*/);
             }
 
         }
@@ -45,9 +48,13 @@ namespace Authorization.Controllers
                     return BadRequest(new { message = "User already exists" });
                 return Ok(response);
             }
-            catch
+            catch(RegisterException ex)
             {
-                throw;
+                return BadRequest(ex.Message);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
         [HttpGet("getUsers")]

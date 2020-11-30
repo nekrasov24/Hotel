@@ -26,10 +26,9 @@ namespace Authorization.UserService
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(model.Email))
-                    return null;
+                
                 var user = (await _userRepository.GetAllAsync(u => u.Email.ToUpper().Equals(model.Email.ToUpper()))).FirstOrDefault();
-                if (user != null) return null;
+                if (user != null) throw new Exception("User already exists");
                 
                 var newUser = new User
                 {
@@ -46,9 +45,9 @@ namespace Authorization.UserService
                 var token = GenerateJwtToken(newUser);
                 return token;
             }
-            catch
+            catch(Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
         public string RegisterAdmin(RegisterRequest model)
@@ -79,19 +78,21 @@ namespace Authorization.UserService
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(model.Email))
-                    return null;
+                
                 var user = (await _userRepository.GetAllAsync(u => u.Email.ToUpper().Equals(model.Email.ToUpper()))).FirstOrDefault();
-                if (user == null) return null;
+                if (user == null) throw new Exception("Email is incorrect");
                 var verified = BCrypt.Net.BCrypt.Verify(model.Password, user.Password);
-                if (!verified) return null;
+                if (!verified) throw new Exception("Password is incorrect");
                 var token = GenerateJwtToken(user);
                 return token;
             }
-            catch
+            catch(Exception ex)
             {
-                throw;
+                throw ex;
             }
+                
+            
+
 
         }
         private string GenerateJwtToken(User userInfo)
