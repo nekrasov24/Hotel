@@ -50,3 +50,20 @@ services:
        MSSQL_PID: "Express"
     ports:
       - 14332:1433
+
+  room-service:
+    image: room-service:latest
+    container_name: room-service
+    restart: always
+    ports:
+      - 84:80
+      - 4447:443
+    build:
+      context: ./RoomService/.
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=1111
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+      - ~/.aspnet/https:/https:ro

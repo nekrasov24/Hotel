@@ -19,5 +19,6 @@ namespace Authorization.UserRepository
         IEnumerable<User> GetAllUsers();
         Task<IQueryable<User>> GetAllAsync(Expression<Func<User, bool>> predicate = null,
             Func<IQueryable<User>, IIncludableQueryable<User, object>> includes = null);
+        public User GetUserById(Guid id);
     }
 }

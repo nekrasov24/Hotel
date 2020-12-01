@@ -80,9 +80,9 @@ namespace Authorization.UserService
             {
                 
                 var user = (await _userRepository.GetAllAsync(u => u.Email.ToUpper().Equals(model.Email.ToUpper()))).FirstOrDefault();
-                if (user == null) throw new Exception("Email is incorrect");
+                if (user == null) throw new Exception("Email or Password is incorrect");
                 var verified = BCrypt.Net.BCrypt.Verify(model.Password, user.Password);
-                if (!verified) throw new Exception("Password is incorrect");
+                if (!verified) throw new Exception("Email or Password is incorrect");
                 var token = GenerateJwtToken(user);
                 return token;
             }
@@ -104,7 +104,7 @@ namespace Authorization.UserService
             new Claim(JwtRegisteredClaimNames.Sub, userInfo.FirstName),
             new Claim(JwtRegisteredClaimNames.Email, userInfo.Email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Role, userInfo.Roles.ToString())
+            new Claim("scope", userInfo.Roles.ToString())
             };
 
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
@@ -124,10 +124,19 @@ namespace Authorization.UserService
             return hash;
         }
 
-        public IEnumerable<User> GetUsers()
+        public ProfileModel GetUser(Guid id)
         {
-            var getUsers = _userRepository.GetAllUsers();
-            return getUsers;
+            var user = _userRepository.GetUserById(id);
+            if (user == null) throw new Exception("rtrt");
+            var profileModel = new ProfileModel()
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                DateOfBirth = user.DateOfBirth,
+                Email = user.Email
+
+            };
+            return profileModel;
         }
     }
 }

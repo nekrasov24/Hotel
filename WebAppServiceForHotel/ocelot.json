@@ -47,7 +47,7 @@
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate": "/api/user/getUsers",
+      "DownstreamPathTemplate": "/api/user/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -55,12 +55,26 @@
           "Port": 443
         }
       ],
-      "UpstreamPathTemplate": "/getUsers",
+      "UpstreamPathTemplate": "/api/user/{id}",
       "UpstreamHttpMethod": [ "Get" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": ["Admin"]
+        "AllowedScopes": [ "Admin", "User" ]
       },
+      "ReRoutesCaseSensitive": false,
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate": "/api/weatherForecast",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "room-service",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/weatherForecast",
+      "UpstreamHttpMethod": [ "Get" ],
       "ReRoutesCaseSensitive": false,
       "DangerousAcceptAnyServerCertificateValidator": true
     }

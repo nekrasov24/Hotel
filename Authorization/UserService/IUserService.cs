@@ -12,6 +12,7 @@ namespace Authorization.UserService
         string RegisterAdmin(RegisterRequest model);
         Task<string> Authenticate(AuthenticateRequest model);
         //string GenerateJwtToken(User user);
-        public IEnumerable<User> GetUsers();
+ 
+        ProfileModel GetUser(Guid id);
     }
 }

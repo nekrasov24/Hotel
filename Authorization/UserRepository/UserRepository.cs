@@ -56,5 +56,10 @@ namespace Authorization.UserRepository
                 return predicate != null ? result.Where(predicate) : result;
             });
         }
+
+        public User GetUserById(Guid id)
+        {
+            return _userContext.Users.FirstOrDefault(x => x.Id.Equals(id));
+        }
     }
 }

@@ -57,10 +57,10 @@ namespace Authorization.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("getUsers")]
-        public IActionResult Get()
+        [HttpGet("{id}")]
+        public IActionResult Get(Guid id)
         {
-            var obUsers = _userService.GetUsers();
+            var obUsers = _userService.GetUser(id);
             return Ok(obUsers);
         }
     }
