@@ -13,10 +13,9 @@ namespace Authorization.UserRepository
         Task AddUserAsync(User user);
         IEnumerable<User> GetAll();
         Task UpdateUser(User user);
-        //User GetUser();
-        //void SaveChanges();
+
         Task SaveChangeAsync();
-        IEnumerable<User> GetAllUsers();
+
         Task<IQueryable<User>> GetAllAsync(Expression<Func<User, bool>> predicate = null,
             Func<IQueryable<User>, IIncludableQueryable<User, object>> includes = null);
         public User GetUserById(Guid id);

@@ -8,6 +8,7 @@ namespace RoomService.RoomModel
 {
     public class RoomContext : DbContext
     {
+        public DbSet<Room> Rooms { get; set; }
         public RoomContext(DbContextOptions<RoomContext> options) : base(options)
         {
 

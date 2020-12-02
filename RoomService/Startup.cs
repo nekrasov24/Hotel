@@ -6,10 +6,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RoomService.RoomModel;
+using RoomService.RoomRepository;
+using RoomService.RoomService;
 
 namespace RoomService
 {
@@ -25,9 +29,11 @@ namespace RoomService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connectionstring = Configuration.GetConnectionString("");
-            services.AddDbContext<RoomContext>();
-            
+            string connectionstring = Configuration.GetConnectionString("DefaultConnectionString");
+            services.AddDbContext<RoomContext>(options => options.UseSqlServer(connectionstring));
+            services.AddScoped<IRoomRepository, RoomRepository.RoomRepository>();
+            services.AddScoped<IRoomService, RoomService.RoomService>();
+
             services.AddControllers();
         }
 

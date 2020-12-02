@@ -38,23 +38,18 @@ namespace Authorization.UserRepository
             await _userContext.SaveChangesAsync();
 
         }
-        public IEnumerable<User> GetAllUsers()
-        {
-            return _userContext.Users.ToArray();     
-        }
-
+   
         public async Task<IQueryable<User>> GetAllAsync(Expression<Func<User, bool>> predicate = null,
             Func<IQueryable<User>, IIncludableQueryable<User, object>> includes = null)
         {
-            return await Task.Run(() =>
-            {
+           
+            
                 var result = _userContext.Users.AsQueryable();
 
                 if (includes != null)
                     result = includes(result);
 
-                return predicate != null ? result.Where(predicate) : result;
-            });
+                return await Task.FromResult(predicate != null ? result.Where(predicate) : result);
         }
 
         public User GetUserById(Guid id)
