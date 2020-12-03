@@ -1,4 +1,5 @@
-﻿using RoomService.RoomModel;
+﻿
+using RoomService.RoomModel;
 using RoomService.RoomRepository;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace RoomService.RoomService
                     RoomType = model.RoomType
                 };
                 await _roomRepository.AddRoomAsync(newRoom);
-                return "";
+                return "Number was added successfully";
             }
             catch
             {
@@ -41,10 +42,10 @@ namespace RoomService.RoomService
             }
         }
 
-        public async Task<string> DeliteRoomAsync(string number)
+        public async Task<string> DeleteRoomAsync(string number)
         {
-            await _roomRepository.DeliteRoomByNumber(number);
-            return "";
+            await _roomRepository.DeleteRoomByNumber(number);
+            return "Number was delited successfully";
         }
     }
 }

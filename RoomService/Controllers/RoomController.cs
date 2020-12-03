@@ -19,9 +19,9 @@ namespace RoomService.Controllers
             _roomService = roomService;
         }
 
-        public async Task<IActionResult> DeliteRoomAsync(string number)
+        public async Task<IActionResult> DeleteRoomAsync(string num)
         {
-            var resp = await _roomService.DeliteRoomAsync(number);
+            var resp = await _roomService.DeleteRoomAsync(num);
             return Ok(resp);
         }
 

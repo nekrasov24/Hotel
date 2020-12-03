@@ -35,7 +35,7 @@ namespace RoomService.RoomRepository
             await SaveChangeAsync();
         }
 
-        public async Task DeliteRoomAsync(Room room)
+        public async Task DeleteRoomAsync(Room room)
         {
             _roomContext.Rooms.Remove(room);
             await SaveChangeAsync();
@@ -55,10 +55,10 @@ namespace RoomService.RoomRepository
             });
         }
 
-        public async Task DeliteRoomByNumber(string number)
+        public async Task DeleteRoomByNumber(string number)
         {
             var findRoom = _roomContext.Rooms.FirstOrDefault(x => x.Id.Equals(number));
-            await DeliteRoomAsync(findRoom);
+            await DeleteRoomAsync(findRoom);
             
         }
     }

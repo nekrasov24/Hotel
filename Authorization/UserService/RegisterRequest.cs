@@ -13,7 +13,7 @@ namespace Authorization.UserService
         [Required(ErrorMessage = "Last Name is required")]
         public string LastName { get; set; }
         [Required(ErrorMessage = "Email is required")]
-        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Email is not valid")]
+        [RegularExpression(@"^(([^<>()\\[\]\\.,;:\s@""]+(\.[^<>()\\[\]\\.,;:\s@""]+)*)|("".+""))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$", ErrorMessage = "Email is not valid")]
         public string Email { get; set; }
         [Required(ErrorMessage = "Date of Birth is required")]
         [DataType(DataType.DateTime)]

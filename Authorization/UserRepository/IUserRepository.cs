@@ -11,7 +11,7 @@ namespace Authorization.UserRepository
     public interface IUserRepository
     {
         Task AddUserAsync(User user);
-        IEnumerable<User> GetAll();
+        //IEnumerable<User> GetAll();
         Task UpdateUser(User user);
 
         Task SaveChangeAsync();

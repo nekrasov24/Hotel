@@ -137,7 +137,7 @@ namespace Authorization.UserService
                 Email = user.Email
 
             };
-            return profileModel;
+            return  profileModel;
         }
     }
 }

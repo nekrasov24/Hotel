@@ -23,10 +23,10 @@ namespace Authorization.UserRepository
             await SaveChangeAsync();
         }
 
-        public IEnumerable<User> GetAll()
+        /*public IEnumerable<User> GetAll()
         {
             return _userContext.Users.ToArray();
-        }
+        }*/
 
         public async Task UpdateUser(User user)
         {

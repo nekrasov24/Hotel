@@ -8,6 +8,6 @@ namespace RoomService.RoomService
     public interface IRoomService
     {
         Task<string> AddARoomAsync(RoomRequestModel model);
-        Task<string> DeliteRoomAsync(string number);
+        Task<string> DeleteRoomAsync(string number);
     }
 }

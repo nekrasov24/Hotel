@@ -8,15 +8,11 @@ namespace Authorization.UserService
 {
     public class AuthenticateRequest
     {
-        [Required(ErrorMessage = "First Name is required")]
-        public string FirstName { get; set; }
         [Required(ErrorMessage = "Email is required")]
-
-        //[RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$")]
+        [RegularExpression(@"^(([^<>()\\[\]\\.,;:\s@""]+(\.[^<>()\\[\]\\.,;:\s@""]+)*)|("".+""))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$", ErrorMessage = "Email is not rrrrr valid")]
         public string Email { get; set; }
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
-        [StringLength(30, ErrorMessage = "Password is short", MinimumLength = 4)]
         public string Password { get; set; }
     }
 }
