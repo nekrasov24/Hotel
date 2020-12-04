@@ -19,15 +19,24 @@ namespace RoomService.Controllers
             _roomService = roomService;
         }
 
-        public async Task<IActionResult> DeleteRoomAsync(string num)
+        [HttpDelete("deleteroom")]
+        public async Task<IActionResult> DeleteRoomAsync(Guid id)
         {
-            var resp = await _roomService.DeleteRoomAsync(num);
+            var resp = await _roomService.DeleteRoomAsync(id);
             return Ok(resp);
         }
 
+        [HttpPost("addroom")]
         public async Task<IActionResult> AddRoomAsync(RoomRequestModel room)
         {
             var resp = await _roomService.AddARoomAsync(room);
+            return Ok(resp);
+        }
+
+        [HttpPost("updateroom")]
+        public async Task<IActionResult> UpdateRoomAsync(UpdateRoomModelRequest model)
+        {
+            var resp = await _roomService.EditRoomAsync(model);
             return Ok(resp);
         }
     }

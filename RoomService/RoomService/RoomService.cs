@@ -12,11 +12,12 @@ namespace RoomService.RoomService
     public class RoomService : IRoomService
     {
         private readonly IRoomRepository _roomRepository;
+        private readonly IMapper _mapper;
 
-
-        public RoomService(IRoomRepository roomRepository)
+        public RoomService(IRoomRepository roomRepository, IMapper mapper)
         {
             _roomRepository = roomRepository;
+            _mapper = mapper;
         }
 
         public async Task<string> AddARoomAsync(RoomRequestModel model)
@@ -46,15 +47,16 @@ namespace RoomService.RoomService
 
         public async Task<string> EditRoomAsync(UpdateRoomModelRequest model)
         {
-            var room = mapper.Map<FooDto>(foo);
 
-            await _roomRepository.UpdateRoom(con);
+            var updateRoom = _mapper.Map<Room>(model);
+
+            await _roomRepository.UpdateRoom(updateRoom);
             return "";
         }
 
-        public async Task<string> DeleteRoomAsync(string number)
+        public async Task<string> DeleteRoomAsync(Guid id)
         {
-            await _roomRepository.DeleteRoomByNumber(number);
+            await _roomRepository.DeleteRoomByNumber(id);
             return "Number was delited successfully";
         }
     }

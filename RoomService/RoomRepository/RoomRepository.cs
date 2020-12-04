@@ -50,9 +50,9 @@ namespace RoomService.RoomRepository
             });
         }
 
-        public async Task DeleteRoomByNumber(string number)
+        public async Task DeleteRoomByNumber(Guid id)
         {
-            var findRoom = _roomContext.Rooms.FirstOrDefault(x => x.Id.Equals(number));
+            var findRoom = _roomContext.Rooms.FirstOrDefault(x => x.Id.Equals(id));
             await DeleteRoomAsync(findRoom);
 
         }

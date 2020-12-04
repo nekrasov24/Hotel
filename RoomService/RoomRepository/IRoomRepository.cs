@@ -15,7 +15,7 @@ namespace RoomService.RoomRepository
         Task DeleteRoomAsync(Room room);
         Task<IQueryable<Room>> GetAllAsync(Expression<Func<Room, bool>> predicate = null,
             Func<IQueryable<Room>, IIncludableQueryable<Room, object>> includes = null);
-        Task DeleteRoomByNumber(string number);
+        Task DeleteRoomByNumber(Guid id);
         Task UpdateRoom(Room room);
     }
 }
