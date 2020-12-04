@@ -1,4 +1,5 @@
 ﻿
+using AutoMapper;
 using RoomService.RoomModel;
 using RoomService.RoomRepository;
 using System;
@@ -11,6 +12,7 @@ namespace RoomService.RoomService
     public class RoomService : IRoomService
     {
         private readonly IRoomRepository _roomRepository;
+
 
         public RoomService(IRoomRepository roomRepository)
         {
@@ -40,6 +42,14 @@ namespace RoomService.RoomService
             {
                 throw;
             }
+        }
+
+        public async Task<string> EditRoomAsync(UpdateRoomModelRequest model)
+        {
+            var room = mapper.Map<FooDto>(foo);
+
+            await _roomRepository.UpdateRoom(con);
+            return "";
         }
 
         public async Task<string> DeleteRoomAsync(string number)

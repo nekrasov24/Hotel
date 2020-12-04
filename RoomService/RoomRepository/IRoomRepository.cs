@@ -12,10 +12,10 @@ namespace RoomService.RoomRepository
     {
         Task SaveChangeAsync();
         Task AddRoomAsync(Room room);
-        Task UpdateRoomAsync(Room room);
         Task DeleteRoomAsync(Room room);
         Task<IQueryable<Room>> GetAllAsync(Expression<Func<Room, bool>> predicate = null,
             Func<IQueryable<Room>, IIncludableQueryable<Room, object>> includes = null);
         Task DeleteRoomByNumber(string number);
+        Task UpdateRoom(Room room);
     }
 }

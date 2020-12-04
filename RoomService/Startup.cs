@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -33,6 +34,11 @@ namespace RoomService
             services.AddDbContext<RoomContext>(options => options.UseSqlServer(connectionstring));
             services.AddScoped<IRoomRepository, RoomRepository.RoomRepository>();
             services.AddScoped<IRoomService, RoomService.RoomService>();
+
+            var configuration = new MapperConfiguration(cfg =>
+            cfg.CreateMap<UpdateRoomModelRequest, Room>());
+            configuration.AssertConfigurationIsValid();
+            var mapper = configuration.CreateMapper();
 
             services.AddControllers();
         }

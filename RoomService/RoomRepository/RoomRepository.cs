@@ -29,11 +29,6 @@ namespace RoomService.RoomRepository
             await SaveChangeAsync();
         }
 
-        public async Task UpdateRoomAsync(Room room)
-        {
-            _roomContext.Rooms.Update(room);
-            await SaveChangeAsync();
-        }
 
         public async Task DeleteRoomAsync(Room room)
         {
@@ -59,7 +54,13 @@ namespace RoomService.RoomRepository
         {
             var findRoom = _roomContext.Rooms.FirstOrDefault(x => x.Id.Equals(number));
             await DeleteRoomAsync(findRoom);
-            
+
+        }
+
+        public async Task UpdateRoom(Room room)
+        {
+            _roomContext.Rooms.Update(room);
+            await SaveChangeAsync();
         }
     }
 }
