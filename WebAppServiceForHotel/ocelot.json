@@ -79,7 +79,7 @@
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate": "/api/room/deleteroom",
+      "DownstreamPathTemplate": "/api/rooms/{id}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -87,17 +87,17 @@
           "Port": 443
         }
       ],
-      "UpstreamPathTemplate": "/api/deleteroom",
+      "UpstreamPathTemplate": "/api/{id}",
       "UpstreamHttpMethod": [ "Delete" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": [ "Admin" ]
+        "AllowedScopes": [ "Admin", "User" ]
       },
       "ReRoutesCaseSensitive": false,
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate": "/api/room/addroom",
+      "DownstreamPathTemplate": "/api/rooms/addroom",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -109,13 +109,13 @@
       "UpstreamHttpMethod": [ "Post" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": [ "Admin" ]
+        "AllowedScopes": [ "Admin", "User" ]
       },
       "ReRoutesCaseSensitive": false,
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate": "/api/room/updateroom",
+      "DownstreamPathTemplate": "/api/rooms/updateroom",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -127,7 +127,7 @@
       "UpstreamHttpMethod": [ "Post" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": [ "Admin" ]
+        "AllowedScopes": [ "Admin", "User" ]
       },
       "ReRoutesCaseSensitive": false,
       "DangerousAcceptAnyServerCertificateValidator": true

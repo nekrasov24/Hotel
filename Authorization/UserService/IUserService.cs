@@ -11,8 +11,6 @@ namespace Authorization.UserService
         Task<string> Register(RegisterRequest model);
         string RegisterAdmin(RegisterRequest model);
         Task<string> Authenticate(AuthenticateRequest model);
-        //string GenerateJwtToken(User user);
- 
         ProfileModel GetUser(Guid id);
     }
 }

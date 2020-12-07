@@ -29,13 +29,6 @@ namespace RoomService.RoomRepository
             await SaveChangeAsync();
         }
 
-
-        public async Task DeleteRoomAsync(Room room)
-        {
-            _roomContext.Rooms.Remove(room);
-            await SaveChangeAsync();
-        }
-
         public async Task<IQueryable<Room>> GetAllAsync(Expression<Func<Room, bool>> predicate = null,
             Func<IQueryable<Room>, IIncludableQueryable<Room, object>> includes = null)
         {
@@ -50,10 +43,12 @@ namespace RoomService.RoomRepository
             });
         }
 
-        public async Task DeleteRoomByNumber(Guid id)
+        public async Task DeleteRoom(Guid id)
         {
             var findRoom = _roomContext.Rooms.FirstOrDefault(x => x.Id.Equals(id));
-            await DeleteRoomAsync(findRoom);
+            _roomContext.Rooms.Remove(findRoom);
+            await SaveChangeAsync();
+            
 
         }
 
@@ -61,6 +56,12 @@ namespace RoomService.RoomRepository
         {
             _roomContext.Rooms.Update(room);
             await SaveChangeAsync();
+        }
+
+        public async Task<Room> FindRoomAsync(Guid id)
+        {
+            var find = await _roomContext.Rooms.FindAsync(id);
+            return find;
         }
     }
 }

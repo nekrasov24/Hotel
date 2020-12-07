@@ -25,7 +25,7 @@ namespace RoomService.RoomService
             try
             {
                 var room = (await _roomRepository.GetAllAsync(r => r.Number.Equals(model.Number))).FirstOrDefault();
-
+                if (room != null) throw new Exception("Room already exists");
                 var newRoom = new Room
                 {
                     Id = Guid.NewGuid(),
@@ -39,25 +39,45 @@ namespace RoomService.RoomService
                 await _roomRepository.AddRoomAsync(newRoom);
                 return "Number was added successfully";
             }
-            catch
+            catch(Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
         public async Task<string> EditRoomAsync(UpdateRoomModelRequest model)
         {
+            try
+            {
+                var updateRoom = _mapper.Map<Room>(model);
 
-            var updateRoom = _mapper.Map<Room>(model);
+                if (updateRoom == null) throw new Exception("Room doesn't exists");
 
-            await _roomRepository.UpdateRoom(updateRoom);
-            return "";
+                await _roomRepository.UpdateRoom(updateRoom);
+                return "Number was edited successfully";
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+
         }
 
         public async Task<string> DeleteRoomAsync(Guid id)
         {
-            await _roomRepository.DeleteRoomByNumber(id);
-            return "Number was delited successfully";
+            try
+            {
+                if (id == null) throw new Exception("Request is incorrect");
+                var find = await _roomRepository.FindRoomAsync(id);
+                if(find == null) throw new Exception("Room doesn't exists");
+                await _roomRepository.DeleteRoom(id);
+                
+                return "Number was deleted successfully";
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
