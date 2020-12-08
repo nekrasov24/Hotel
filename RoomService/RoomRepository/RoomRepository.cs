@@ -52,7 +52,7 @@ namespace RoomService.RoomRepository
 
         }
 
-        public async Task UpdateRoom(Room room)
+        public async Task EditRoom(Room room)
         {
             _roomContext.Rooms.Update(room);
             await SaveChangeAsync();

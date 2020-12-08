@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace RoomService.RoomService
 {
-    public class UpdateRoomModelRequest
+    public class EditRoomRequestModel
     {
-        [Key]
         public Guid Id { get; set; }
         public string Name { get; set; }
         public int Number { get; set; }

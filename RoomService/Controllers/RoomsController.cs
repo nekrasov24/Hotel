@@ -49,8 +49,8 @@ namespace RoomService.Controllers
 
         }
 
-        [HttpPut("updateroom")]
-        public async Task<IActionResult> UpdateRoomAsync(UpdateRoomModelRequest model)
+        [HttpPut("editroom")]
+        public async Task<IActionResult> EditRoomAsync(EditRoomRequestModel model)
         {
             try
             {

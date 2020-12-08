@@ -12,7 +12,7 @@ namespace RoomService.MapperProfile
     {
         public RoomProfiles()
         {
-            CreateMap<UpdateRoomModelRequest, Room>();
+            CreateMap<EditRoomRequestModel, Room>();
         }
         
     }

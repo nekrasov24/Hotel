@@ -115,7 +115,7 @@
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate": "/api/rooms/updateroom",
+      "DownstreamPathTemplate": "/api/rooms/editroom",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -123,7 +123,7 @@
           "Port": 443
         }
       ],
-      "UpstreamPathTemplate": "/api/updateroom",
+      "UpstreamPathTemplate": "/api/editroom",
       "UpstreamHttpMethod": [ "Post" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",

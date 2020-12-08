@@ -9,7 +9,7 @@ namespace RoomService.RoomService
     {
         Task<string> AddARoomAsync(RoomRequestModel model);
         Task<string> DeleteRoomAsync(Guid id);
-        Task<string> EditRoomAsync(UpdateRoomModelRequest model);
+        Task<string> EditRoomAsync(EditRoomRequestModel model);
 
     }
 }

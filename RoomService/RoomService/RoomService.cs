@@ -45,7 +45,7 @@ namespace RoomService.RoomService
             }
         }
 
-        public async Task<string> EditRoomAsync(UpdateRoomModelRequest model)
+        public async Task<string> EditRoomAsync(EditRoomRequestModel model)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace RoomService.RoomService
 
                 if (updateRoom == null) throw new Exception("Room doesn't exists");
 
-                await _roomRepository.UpdateRoom(updateRoom);
+                await _roomRepository.EditRoom(updateRoom);
                 return "Number was edited successfully";
             }
             catch(Exception ex)
