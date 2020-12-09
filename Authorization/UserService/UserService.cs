@@ -16,11 +16,11 @@ namespace Authorization.UserService
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IRepository<User, Guid> _userRepository;
         private readonly IConfiguration _configuration;
-        public UserService(IUserRepository userRepository, IConfiguration configuration)
+        public UserService(IRepository<User, Guid> repository, IConfiguration configuration)
         {
-            _userRepository = userRepository;
+            _userRepository = repository;
             _configuration = configuration;
         }
         public async Task<string> Register(RegisterRequest model)

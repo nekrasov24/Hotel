@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RoomService.RoomModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace RoomService.RoomService
         Task<string> AddARoomAsync(RoomRequestModel model);
         Task<string> DeleteRoomAsync(Guid id);
         Task<string> EditRoomAsync(EditRoomRequestModel model);
+        Task<IList<Room>> GetAllRoomsAsync();
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Authorization.Dal;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
@@ -8,29 +9,26 @@ using System.Threading.Tasks;
 
 namespace Authorization.UserRepository
 {
-    public class UserRepository : IUserRepository
+    public class GenericRepository<T, Tkey> : IRepository<T, Tkey> where T : class where Tkey : struct
     {
         private readonly UserContext _userContext;
+        private readonly DbSet<T> _dbSet;
 
-        public UserRepository(UserContext userContext)
+        public GenericRepository(UserContext userContext)
         {
             _userContext = userContext;
+            _dbSet = _userContext.Set<T>();
         }
 
-        public async Task AddUserAsync(User user)
+        public async Task AddUserAsync(T obj)
         {
-            _userContext.Users.Add(user);
+            _dbSet.Add(obj);
             await SaveChangeAsync();
         }
 
-        /*public IEnumerable<User> GetAll()
+        public async Task UpdateUser(T obj)
         {
-            return _userContext.Users.ToArray();
-        }*/
-
-        public async Task UpdateUser(User user)
-        {
-            _userContext.Users.Update(user);
+            _dbSet.Update(obj);
             await SaveChangeAsync();
         }
         public async Task SaveChangeAsync()
@@ -39,12 +37,12 @@ namespace Authorization.UserRepository
 
         }
    
-        public async Task<IQueryable<User>> GetAllAsync(Expression<Func<User, bool>> predicate = null,
-            Func<IQueryable<User>, IIncludableQueryable<User, object>> includes = null)
+        public async Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> includes = null)
         {
            
             
-                var result = _userContext.Users.AsQueryable();
+                var result = _dbSet.AsQueryable();
 
                 if (includes != null)
                     result = includes(result);
@@ -52,7 +50,7 @@ namespace Authorization.UserRepository
                 return await Task.FromResult(predicate != null ? result.Where(predicate) : result);
         }
 
-        public User GetUserById(Guid id)
+        public User GetUserById(Tkey id)
         {
             return _userContext.Users.FirstOrDefault(x => x.Id.Equals(id));
         }

@@ -11,10 +11,10 @@ namespace RoomService.RoomService
 {
     public class RoomService : IRoomService
     {
-        private readonly IRoomRepository _roomRepository;
+        private readonly IRepository<Room, Guid> _roomRepository;
         private readonly IMapper _mapper;
 
-        public RoomService(IRoomRepository roomRepository, IMapper mapper)
+        public RoomService(IRepository<Room, Guid> roomRepository, IMapper mapper)
         {
             _roomRepository = roomRepository;
             _mapper = mapper;
@@ -78,6 +78,11 @@ namespace RoomService.RoomService
             {
                 throw ex;
             }
+        }
+
+        public async Task<IList<Room>> GetAllRoomsAsync()
+        {
+            return (await _roomRepository.GetAllAsync()).ToList();
         }
     }
 }

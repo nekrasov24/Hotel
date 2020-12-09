@@ -37,7 +37,7 @@ namespace Authorization
             services.AddDbContext<UserContext>(options => options.UseSqlServer(connection));
             services.AddControllers();
             services.AddScoped<IUserService, UserService.UserService>();
-            services.AddScoped<IUserRepository, UserRepository.UserRepository>();
+            services.AddScoped<IRepository<User, Guid>, GenericRepository<User, Guid>>();
 
         }
 
@@ -51,7 +51,7 @@ namespace Authorization
                 service.RegisterAdmin(new RegisterRequest()
                 {
                     FirstName = "Dmitry", LastName = "Nekrasov",
-                    Email = "d.a.04nekrasovgmail.com",
+                    Email = "nekrasov@gmail.com",
                     DateOfBirth = new DateTime(1992, 10, 04),
                     Password = "Nekrasov22Nekrasov",
                     PasswordConfirm = "Nekrasov22Nekrasov"

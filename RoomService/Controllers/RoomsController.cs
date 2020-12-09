@@ -62,5 +62,13 @@ namespace RoomService.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("getallrooms")]
+        public async Task<IActionResult> GetAllRoomsAsync()
+        {
+            var getAllRooms = await _roomService.GetAllRoomsAsync();
+            return Ok(getAllRooms);
+        }
     }
 }
+

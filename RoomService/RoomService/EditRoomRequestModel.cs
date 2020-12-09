@@ -9,12 +9,19 @@ namespace RoomService.RoomService
 {
     public class EditRoomRequestModel
     {
+        [Required]
         public Guid Id { get; set; }
+        [Required]
         public string Name { get; set; }
+        [Required]
         public int Number { get; set; }
+        [Required]
         public int NumberOfPeople { get; set; }
+        [Required]
         public decimal PriceForNight { get; set; }
+        [Required]
         public string Description { get; set; }
+        [Required]
         public RoomType RoomType { get; set; }
     }
 }

@@ -1,23 +1,13 @@
 ﻿using Authorization.Dal;
-using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Authorization.UserRepository
 {
-    public interface IUserRepository
+    public interface IUserRepository : IRepository<User, Guid> 
     {
-        Task AddUserAsync(User user);
-        //IEnumerable<User> GetAll();
-        Task UpdateUser(User user);
 
-        Task SaveChangeAsync();
-
-        Task<IQueryable<User>> GetAllAsync(Expression<Func<User, bool>> predicate = null,
-            Func<IQueryable<User>, IIncludableQueryable<User, object>> includes = null);
-        public User GetUserById(Guid id);
     }
 }
