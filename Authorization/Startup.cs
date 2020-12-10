@@ -37,7 +37,7 @@ namespace Authorization
             services.AddDbContext<UserContext>(options => options.UseSqlServer(connection));
             services.AddControllers();
             services.AddScoped<IUserService, UserService.UserService>();
-            services.AddScoped<IRepository<User, Guid>, GenericRepository<User, Guid>>();
+            services.AddScoped<IRepository<User, Guid>, Repository<User, Guid>>();
 
         }
 

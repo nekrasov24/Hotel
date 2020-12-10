@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace RoomService.RoomRepository
 {
-    public class GenericRepository<T, Tkey> : IRepository<T, Tkey> where T : class where Tkey : struct
+    public class Repository<T, Tkey> : IRepository<T, Tkey> where T : class where Tkey : struct
     {
         private readonly RoomContext _roomContext;
         private readonly DbSet<T> _dbSet;
 
-        public GenericRepository(RoomContext roomContext)
+        public Repository(RoomContext roomContext)
         {
             _roomContext = roomContext;
             _dbSet = _roomContext.Set<T>();

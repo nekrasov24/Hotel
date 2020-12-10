@@ -9,7 +9,6 @@ namespace RoomService.RoomModel
     public class Room
     {
         [Key]
-
         public Guid Id { get; set; }
         [StringLength(30)]
         public string Name { get; set; }

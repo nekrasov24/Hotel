@@ -33,7 +33,7 @@ namespace RoomService
         {
             string connectionstring = Configuration.GetConnectionString("DefaultConnectionString");
             services.AddDbContext<RoomContext>(options => options.UseSqlServer(connectionstring));
-            services.AddScoped<IRepository<Room, Guid>, GenericRepository<Room, Guid>>();
+            services.AddScoped<IRepository<Room, Guid>, Repository<Room, Guid>>();
             services.AddScoped<IRoomService, RoomService.RoomService>();
             services.AddMapper();
 

@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Authorization.UserRepository
 {
-    public class GenericRepository<T, Tkey> : IRepository<T, Tkey> where T : class where Tkey : struct
+    public class Repository<T, Tkey> : IRepository<T, Tkey> where T : class where Tkey : struct
     {
         private readonly UserContext _userContext;
         private readonly DbSet<T> _dbSet;
 
-        public GenericRepository(UserContext userContext)
+        public Repository(UserContext userContext)
         {
             _userContext = userContext;
             _dbSet = _userContext.Set<T>();

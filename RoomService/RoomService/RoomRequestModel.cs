@@ -9,17 +9,17 @@ namespace RoomService.RoomService
 {
     public class RoomRequestModel
     {
-        [Required]
+        [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Number is required")]
         public int Number { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Number Of People is required")]
         public int NumberOfPeople { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Price For Night required")]
         public decimal PriceForNight { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Description is required")]
         public string Description { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Room Type is required")]
         public RoomType RoomType { get; set; }
     }
 }
