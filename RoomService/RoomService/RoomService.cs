@@ -84,5 +84,12 @@ namespace RoomService.RoomService
         {
             return (await _roomRepository.GetAllAsync()).ToList();
         }
+        public Room GetRoom(Guid id)
+        {
+            var room = _roomRepository.GetRoomById(id);
+            if (room == null) throw new Exception($"Room not found");
+
+            return room;
+        }
     }
 }

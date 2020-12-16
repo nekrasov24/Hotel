@@ -69,6 +69,13 @@ namespace RoomService.Controllers
             var getAllRooms = await _roomService.GetAllRoomsAsync();
             return Ok(getAllRooms);
         }
+
+        [HttpGet("{id}")]
+        public IActionResult GetRoom(Guid id)
+        {
+            var room = _roomService.GetRoom(id);
+            return Ok(room);
+        }
     }
 }
 

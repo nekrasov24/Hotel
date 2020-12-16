@@ -12,5 +12,6 @@ namespace Authorization.UserService
         string RegisterAdmin(RegisterRequest model);
         Task<string> Authenticate(AuthenticateRequest model);
         ProfileModel GetUser(Guid id);
+        Task<string> EditUserAsync(EditUserRequestModel model);
     }
 }

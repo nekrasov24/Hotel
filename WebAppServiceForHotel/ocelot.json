@@ -29,6 +29,27 @@
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
+      "DownstreamPathTemplate": "/api/user/edituser",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authorization-service",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/api/edituser",
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "Admin", "User" ]
+      },
+      "ReRoutesCaseSensitive": false,
+      "DangerousAcceptAnyServerCertificateValidator": true,
+      "AddHeadersToRequest": {
+        "claims_UserId": "Claims[jti] > value > |"
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/weatherForecast",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -148,6 +169,23 @@
         "AllowedScopes": [ "Admin", "User" ]
       },
       "ReRoutesCaseSensitive": false,
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate": "/api/rooms/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "room-service",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/api/rooms/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "Admin", "User" ]
+      },
       "DangerousAcceptAnyServerCertificateValidator": true
     }
 

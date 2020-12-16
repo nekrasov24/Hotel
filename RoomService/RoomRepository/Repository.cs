@@ -66,5 +66,10 @@ namespace RoomService.RoomRepository
             var find = await _dbSet.FindAsync(id);
             return find;
         }
+
+        public Room GetRoomById(Tkey id)
+        {
+            return _roomContext.Rooms.FirstOrDefault(x => x.Id.Equals(id));
+        }
     }
 }

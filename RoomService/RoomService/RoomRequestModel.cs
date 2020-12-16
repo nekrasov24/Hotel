@@ -9,7 +9,7 @@ namespace RoomService.RoomService
 {
     public class RoomRequestModel
     {
-        [Required(ErrorMessage = "Name is required")]
+        [Required(ErrorMessage = "Name is required", AllowEmptyStrings = false)]
         public string Name { get; set; }
         [Required(ErrorMessage = "Number is required")]
         public int Number { get; set; }

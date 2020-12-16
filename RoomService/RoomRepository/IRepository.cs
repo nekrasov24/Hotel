@@ -17,5 +17,6 @@ namespace RoomService.RoomRepository
         Task DeleteRoom(Tkey id);
         Task EditRoom(T room);
         Task<T> FindRoomAsync(Tkey id);
+        public Room GetRoomById(Tkey id);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Authorization.Constants;
 using Authorization.Dal;
+using Authorization.HeaderService;
 using Authorization.UserRepository;
+using AutoMapper;
 using Elskom.Generic.Libs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -17,11 +19,15 @@ namespace Authorization.UserService
     public class UserService : IUserService
     {
         private readonly IRepository<User, Guid> _userRepository;
+        private readonly IHeaderService _headerService;
         private readonly IConfiguration _configuration;
-        public UserService(IRepository<User, Guid> repository, IConfiguration configuration)
+        private readonly IMapper _mapper;
+        public UserService(IRepository<User, Guid> repository, IConfiguration configuration, IMapper mapper, IHeaderService headerService)
         {
             _userRepository = repository;
             _configuration = configuration;
+            _headerService = headerService;
+            _mapper = mapper;
         }
         public async Task<string> Register(RegisterRequest model)
         {
@@ -104,7 +110,7 @@ namespace Authorization.UserService
             var claims = new[] {
             new Claim(JwtRegisteredClaimNames.Sub, userInfo.FirstName),
             new Claim(JwtRegisteredClaimNames.Email, userInfo.Email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(JwtRegisteredClaimNames.Jti, userInfo.Id.ToString()),
             new Claim("scope", userInfo.Roles.ToString())
             };
 
@@ -128,7 +134,7 @@ namespace Authorization.UserService
         public ProfileModel GetUser(Guid id)
         {
             var user = _userRepository.GetUserById(id);
-            if (user == null) throw new Exception("rtrt");
+            if (user == null) throw new Exception($"User not found");
             var profileModel = new ProfileModel()
             {
                 FirstName = user.FirstName,
@@ -138,6 +144,27 @@ namespace Authorization.UserService
 
             };
             return  profileModel;
+        }
+
+        public async Task<string> EditUserAsync(EditUserRequestModel model)
+        {
+            try
+            {
+                var userId = _headerService.GetUserId();
+                var user = _userRepository.GetUserById(userId);
+
+                if (user == null) throw new Exception("User not found");
+
+                _mapper.Map(model, user);
+
+                await _userRepository.EditUser(user);
+                return "User was edited successfully";
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
         }
     }
 }

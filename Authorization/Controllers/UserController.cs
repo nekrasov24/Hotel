@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Authorization.HeaderService;
 using Authorization.UserService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,8 @@ namespace Authorization.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+
+
         public UserController(IUserService userService)
         {
             _userService = userService;
@@ -62,6 +65,20 @@ namespace Authorization.Controllers
         {
             var obUsers = _userService.GetUser(id);
             return Ok(obUsers);
+        }
+
+        [HttpPut("edituser")]
+        public async Task<IActionResult> EditRoomAsync(EditUserRequestModel model)
+        {
+            try
+            {
+                var resp = await _userService.EditUserAsync(model);
+                return Ok(resp);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

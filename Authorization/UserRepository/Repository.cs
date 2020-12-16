@@ -26,7 +26,7 @@ namespace Authorization.UserRepository
             await SaveChangeAsync();
         }
 
-        public async Task UpdateUser(T obj)
+        public async Task EditUser(T obj)
         {
             _dbSet.Update(obj);
             await SaveChangeAsync();

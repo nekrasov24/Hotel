@@ -12,7 +12,7 @@ namespace Authorization.UserRepository
     { 
         Task AddUserAsync(T obj);
 
-        Task UpdateUser(T obj);
+        Task EditUser(T obj);
 
         Task SaveChangeAsync();
 
