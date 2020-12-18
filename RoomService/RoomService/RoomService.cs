@@ -49,14 +49,17 @@ namespace RoomService.RoomService
         {
             try
             {
-                var updateRoom = _mapper.Map<Room>(model);
+                var room = (await _roomRepository.GetAllAsync(r => r.Id == model.Id)).FirstOrDefault();
 
-                if (updateRoom == null) throw new Exception("Room doesn't exists");
+                if (room == null) throw new Exception("Room doesn't exists");
 
-                await _roomRepository.EditRoom(updateRoom);
+                _mapper.Map(model, room);
+
+                await _roomRepository.EditRoom(room);
                 return "Number was edited successfully";
             }
             catch(Exception ex)
+
             {
                 throw ex;
             }

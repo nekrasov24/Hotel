@@ -7,7 +7,7 @@ namespace RoomService.RoomModel
 {
     public enum RoomType
     {
-         Standart = 1,
+        Standart = 1,
         DeLuxe,
         FamilyRoom,
         Apartament

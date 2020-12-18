@@ -18,5 +18,6 @@ namespace RoomService.RoomRepository
         Task EditRoom(T room);
         Task<T> FindRoomAsync(Tkey id);
         public Room GetRoomById(Tkey id);
+        IQueryable<T> GetRoomAsync(bool asNoTracking = false);
     }
 }

@@ -71,5 +71,13 @@ namespace RoomService.RoomRepository
         {
             return _roomContext.Rooms.FirstOrDefault(x => x.Id.Equals(id));
         }
+
+        public IQueryable<T> GetRoomAsync(bool asNoTracking = true)
+        {
+            var notificationReceiversQuery = _dbSet.AsQueryable();
+
+            return notificationReceiversQuery
+                .AsTracking(asNoTracking ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking);
+        }
     }
 }
