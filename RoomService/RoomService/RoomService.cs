@@ -1,5 +1,6 @@
 ﻿
 using AutoMapper;
+using RoomService.FileService;
 using RoomService.RoomModel;
 using RoomService.RoomRepository;
 using System;
@@ -13,6 +14,7 @@ namespace RoomService.RoomService
     {
         private readonly IRepository<Room, Guid> _roomRepository;
         private readonly IMapper _mapper;
+        private readonly IFileService _fileService;
 
         public RoomService(IRepository<Room, Guid> roomRepository, IMapper mapper)
         {
@@ -24,7 +26,9 @@ namespace RoomService.RoomService
         {
             try
             {
+             
                 var room = (await _roomRepository.GetAllAsync(r => r.Number.Equals(model.Number))).FirstOrDefault();
+
                 if (room != null) throw new Exception("Room already exists");
                 var newRoom = new Room
                 {
@@ -35,6 +39,7 @@ namespace RoomService.RoomService
                     PriceForNight = model.PriceForNight,
                     Description = model.Description,
                     RoomType = model.RoomType
+                    
                 };
                 await _roomRepository.AddRoomAsync(newRoom);
                 return "Number was added successfully";
@@ -90,9 +95,15 @@ namespace RoomService.RoomService
         public Room GetRoom(Guid id)
         {
             var room = _roomRepository.GetRoomById(id);
-            if (room == null) throw new Exception($"Room not found");
+            if (room == null) throw new Exception($"Room was not found");
 
             return room;
+        }
+
+        public string SetImagePath(ImageRequest imageRequest)
+        {
+
+            return "";
         }
     }
 }

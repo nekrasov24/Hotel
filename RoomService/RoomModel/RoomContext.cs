@@ -9,6 +9,7 @@ namespace RoomService.RoomModel
     public class RoomContext : DbContext
     {
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<RoomImages> RoomImages { get; set; }
         public RoomContext(DbContextOptions<RoomContext> options) : base(options)
         {
 

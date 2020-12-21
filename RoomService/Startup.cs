@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RoomService.FileService;
 using RoomService.MapperProfile;
 using RoomService.RoomModel;
 using RoomService.RoomRepository;
@@ -35,7 +36,9 @@ namespace RoomService
             services.AddDbContext<RoomContext>(options => options.UseSqlServer(connectionstring));
             services.AddScoped<IRepository<Room, Guid>, Repository<Room, Guid>>();
             services.AddScoped<IRoomService, RoomService.RoomService>();
+            services.AddScoped<IFileService, FileService.FileService>();
             services.AddMapper();
+
 
             services.AddControllers();
         }

@@ -134,7 +134,7 @@ namespace Authorization.UserService
         public ProfileModel GetUser(Guid id)
         {
             var user = _userRepository.GetUserById(id);
-            if (user == null) throw new Exception($"User not found");
+            if (user == null) throw new Exception($"User was not found");
             var profileModel = new ProfileModel()
             {
                 FirstName = user.FirstName,
@@ -153,7 +153,7 @@ namespace Authorization.UserService
                 var userId = _headerService.GetUserId();
                 var user = _userRepository.GetUserById(userId);
 
-                if (user == null) throw new Exception("User not found");
+                if (user == null) throw new Exception("User was not found");
 
                 _mapper.Map(model, user);
 
