@@ -103,9 +103,22 @@ namespace RoomService.RoomRepository
             //var findImage = await _dbSet.FindAsync(id);
             _dbSet.Remove(obj);
             await SaveChangeAsync();
-
-
         }
+
+        public async Task AddRangeImagesAsync(List<T> obj)
+        {
+            _dbSet.AddRange(obj);
+            await SaveChangeAsync();
+        }
+
+        public async Task DeleteImageAsync(T obj)
+        {
+            //var findImage = await _dbSet.FindAsync(id);
+            _dbSet.Remove(obj);
+            await SaveChangeAsync();
+        }
+
+
 
 
     }

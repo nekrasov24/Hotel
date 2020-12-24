@@ -23,5 +23,7 @@ namespace RoomService.RoomRepository
         RoomImage GetImageById(Tkey id);
         Task EditImage(T obj);
         Task DeleteImage(T id);
+        Task AddRangeImagesAsync(List<T> obj);
+        Task DeleteImageAsync(T obj);
     }
 }

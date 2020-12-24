@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RoomService.FileService
+namespace RoomService.ImagesService
 {
-    public class ImageRequest
+    public class AddImageRequestModel
     {
         public Guid RoomId { get; set; }
         public IFormCollection Images { get; set; }
