@@ -11,7 +11,7 @@ namespace RoomService.RoomService
         Task<string> AddARoomAsync(RoomRequestModel model);
         Task<string> DeleteRoomAsync(Guid id);
         Task<string> EditRoomAsync(EditRoomRequestModel model);
-        Task<IList<Room>> GetAllRoomsAsync();
+        Task<IEnumerable<RoomDTO>> GetAllRoomsAsync();
         Room GetRoom(Guid id);
 
     }

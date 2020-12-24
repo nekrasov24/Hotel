@@ -1,4 +1,5 @@
-﻿using RoomService.RoomModel;
+﻿using Microsoft.AspNetCore.Http;
+using RoomService.RoomModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -29,5 +30,6 @@ namespace RoomService.RoomService
         [Required(ErrorMessage = "Room Type is required")]
         [Range(1, 4)]
         public RoomType RoomType { get; set; }
+        public IFormFile Images { get; set; }
     }
 }

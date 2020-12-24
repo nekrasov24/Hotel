@@ -1,5 +1,7 @@
 ﻿
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using RoomService.FileService;
 using RoomService.RoomModel;
 using RoomService.RoomRepository;
@@ -15,11 +17,15 @@ namespace RoomService.RoomService
         private readonly IRepository<Room, Guid> _roomRepository;
         private readonly IMapper _mapper;
         private readonly IFileService _fileService;
+        private readonly IRepository<RoomImage, Guid> _imagesRepository;
 
-        public RoomService(IRepository<Room, Guid> roomRepository, IMapper mapper)
+        public RoomService(IRepository<Room, Guid> roomRepository, IMapper mapper, IFileService fileService,
+            IRepository<RoomImage, Guid> imagesRepository)
         {
             _roomRepository = roomRepository;
             _mapper = mapper;
+            _fileService = fileService;
+            _imagesRepository = imagesRepository;
         }
 
         public async Task<string> AddARoomAsync(RoomRequestModel model)
@@ -41,7 +47,14 @@ namespace RoomService.RoomService
                     RoomType = model.RoomType
                     
                 };
+
                 await _roomRepository.AddRoomAsync(newRoom);
+                var file = model.Images;
+                var roomId = newRoom.Id;
+                var image = _fileService.AddImageToDbAsync(file, roomId);
+
+                await _imagesRepository.AddImageAsync(image);
+
                 return "Number was added successfully";
             }
             catch(Exception ex)
@@ -58,9 +71,12 @@ namespace RoomService.RoomService
 
                 if (room == null) throw new Exception("Room doesn't exists");
 
+
                 _mapper.Map(model, room);
 
                 await _roomRepository.EditRoom(room);
+
+
                 return "Number was edited successfully";
             }
             catch(Exception ex)
@@ -88,9 +104,23 @@ namespace RoomService.RoomService
             }
         }
 
-        public async Task<IList<Room>> GetAllRoomsAsync()
+        public async Task<IEnumerable<RoomDTO>> GetAllRoomsAsync()
         {
-            return (await _roomRepository.GetAllAsync()).ToList();
+
+            var getRooms = await (await _roomRepository.GetAllAsync(includes: (r) => r.Include(i => i.RoomImages))).ToArrayAsync();
+
+
+            var roomModel = _mapper.Map<IEnumerable<RoomDTO>>(getRooms);
+
+            foreach (var item in roomModel)
+            {
+                foreach (var imageModel in item.RoomImages)
+                {
+                    imageModel.ImagePath = await _fileService.GetAllImageAsync(imageModel.ImagePath);
+                }
+            }
+
+            return roomModel;
         }
         public Room GetRoom(Guid id)
         {
@@ -100,10 +130,24 @@ namespace RoomService.RoomService
             return room;
         }
 
-        public string SetImagePath(ImageRequest imageRequest)
-        {
+        
 
-            return "";
-        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //return await(await _roomRepository.GetAllAsync(includes: (r) => r.Include(i => i.RoomImages))).ToListAsync();
     }
 }

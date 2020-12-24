@@ -1,5 +1,9 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using RoomService.RoomModel;
+using RoomService.RoomRepository;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,17 +16,25 @@ namespace RoomService.FileService
     {
         
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IRepository<RoomImage, Guid> _imagesRepository;
+        private readonly IRepository<Room, Guid> _roomRepository;
 
         [Obsolete]
-        public FileService(IHostingEnvironment hostingEnvironment)
+        public FileService(IHostingEnvironment hostingEnvironment, IRepository<RoomImage, Guid> imagesRepository,
+            IRepository<Room, Guid> roomRepository)
         {
             _hostingEnvironment = hostingEnvironment;
+            _imagesRepository = imagesRepository;
+            _roomRepository = roomRepository;
         }
 
-        public string SetPath(ImageRequest imageRequest)
-        {
 
-            var imageName = imageRequest.Id.ToString() + ".jpeg";
+       
+
+        public RoomImage AddImageToDbAsync(IFormFile imageRequest, Guid id)
+        {
+            var imageId = Guid.NewGuid();
+            var imageName = id.ToString() + ".jpeg";
             var imageSetPath = Path.Combine(_hostingEnvironment.ContentRootPath, @"files/");
             var imagePath = imageSetPath + imageName;
 
@@ -32,25 +44,56 @@ namespace RoomService.FileService
                 directory.Create();
             }
 
-            using var image = Image.Load(imageRequest.Image.OpenReadStream());
+            using var image = Image.Load(imageRequest.OpenReadStream());
             using var outputStream = new FileStream(imagePath, FileMode.Create);
-            image.SaveAsGif(outputStream);
+            image.Mutate(t => t.Resize(200, 150));
+            image.SaveAsJpeg(outputStream);
             int length = (int)outputStream.Length;
             byte[] bytes = new byte[length];
             outputStream.Read(bytes, 0, length);
 
-            return imagePath;
+            //var roomId = id;
+
+            var newImage = new RoomImage()
+            {
+                Id = imageId,
+                ImagePath = imagePath,
+                RoomId = id,
+            };
+
+            return newImage;
+
         }
 
-       /*ublic string GetImageAsBase64()
+
+        
+
+        public async Task<string> GetAllImageAsync(string filePath)
         {
-            using (var fileStream = new FileStream(filepath, FileMode.Open))
+            try
             {
-                int length = (int)fileStream.Length;
-                byte[] bytes = new byte[length];
-                fileStream.Read(bytes, 0, length);
-                return Convert.ToBase64String(bytes);
+                /*if (id == null) throw new Exception("Request is incorrect");
+                var findImage = (await _imagesRepository.GetAllAsync(image => image.RoomId == id)).FirstOrDefault();
+                if (findImage == null) throw new Exception("Image doesn't exists");
+                var filePath = findImage.ImagePath;*/
+
+                using (var fileStream = new FileStream(filePath, FileMode.Open))
+                {
+                    int length = (int)fileStream.Length;
+                    byte[] bytes = new byte[length];
+                    fileStream.Read(bytes, 0, length);
+                    return Convert.ToBase64String(bytes);
+                }
             }
-        }*/
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+
+
     }
 }

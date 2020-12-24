@@ -35,7 +35,7 @@ namespace RoomService.Controllers
         }
 
         [HttpPost("addroom")]
-        public async Task<IActionResult> AddRoomAsync(RoomRequestModel room)
+        public async Task<IActionResult> AddRoomAsync([FromForm] RoomRequestModel room)
         {
             try
             {

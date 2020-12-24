@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RoomService.FileService;
-using RoomService.RoomService;
 
 namespace RoomService.Controllers
 {
@@ -13,16 +12,24 @@ namespace RoomService.Controllers
     [ApiController]
     public class ImagesController : ControllerBase
     {
-        private readonly IRoomService _roomService;
+        private readonly IFileService _fileService;
 
-        public ImagesController(IRoomService roomService)
+        public ImagesController(IFileService fileService)
         {
-            _roomService = roomService;
+            _fileService = fileService;
         }
 
-        public string SetImagePath(ImageRequest imageRequest)
+        [HttpPost("addimage")]
+        public async Task<string> AddImageAsync([FromForm] ImageRequest imageRequest)
         {
-            var res = _roomService.SetImagePath(imageRequest);
+            //var res = await _fileService.AddImageAsync(imageRequest);
+            return "";
+        }
+
+        [HttpGet("{id}")]
+        public async Task<string> GetImageAsync(Guid id)
+        {
+            //var res = await _fileService.GetImageAsync(id);
             return "";
         }
     }

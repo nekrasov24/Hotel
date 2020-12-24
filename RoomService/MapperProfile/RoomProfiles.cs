@@ -13,6 +13,8 @@ namespace RoomService.MapperProfile
         public RoomProfiles()
         {
             CreateMap<EditRoomRequestModel, Room>();
+            CreateMap<Room, RoomDTO>();
+            CreateMap<RoomImage, RoomImageModel>();
         }
         
     }

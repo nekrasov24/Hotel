@@ -8,7 +8,7 @@ namespace RoomService.FileService
 {
     public class ImageRequest
     {
-        public Guid Id { get; set; }
+        public Guid RoomId { get; set; }
         public IFormFile Image { get; set; }
     }
 }

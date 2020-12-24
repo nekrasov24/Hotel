@@ -18,6 +18,7 @@ namespace RoomService.RoomRepository
         {
             _roomContext = roomContext;
             _dbSet = _roomContext.Set<T>();
+
         }
 
         public async Task SaveChangeAsync()
@@ -79,5 +80,18 @@ namespace RoomService.RoomRepository
             return notificationReceiversQuery
                 .AsTracking(asNoTracking ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking);
         }
+
+        public async Task AddImageAsync(T obj)
+        {
+            _dbSet.Add(obj);
+            await SaveChangeAsync();
+        }
+
+        public RoomImage GetImageById(Tkey id)
+        {
+            return _roomContext.RoomImages.FirstOrDefault(x => x.Id.Equals(id));
+        }
+
+
     }
 }
