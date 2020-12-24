@@ -21,5 +21,7 @@ namespace RoomService.RoomRepository
         IQueryable<T> GetRoomAsync(bool asNoTracking = false);
         Task AddImageAsync(T obj);
         RoomImage GetImageById(Tkey id);
+        Task EditImage(T obj);
+        Task DeleteImage(T id);
     }
 }

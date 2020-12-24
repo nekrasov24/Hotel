@@ -50,7 +50,7 @@ namespace RoomService.Controllers
         }
 
         [HttpPut("editroom")]
-        public async Task<IActionResult> EditRoomAsync(EditRoomRequestModel model)
+        public async Task<IActionResult> EditRoomAsync([FromForm] EditRoomRequestModel model)
         {
             try
             {

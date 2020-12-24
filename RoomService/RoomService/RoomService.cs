@@ -51,9 +51,12 @@ namespace RoomService.RoomService
                 await _roomRepository.AddRoomAsync(newRoom);
                 var file = model.Images;
                 var roomId = newRoom.Id;
-                var image = _fileService.AddImageToDbAsync(file, roomId);
+                foreach(var image in model.Images)
+                {
+                    var roomImage = _fileService.AddImageAsync(image, roomId);
 
-                await _imagesRepository.AddImageAsync(image);
+                    await _imagesRepository.AddImageAsync(roomImage);
+                }
 
                 return "Number was added successfully";
             }
@@ -71,11 +74,23 @@ namespace RoomService.RoomService
 
                 if (room == null) throw new Exception("Room doesn't exists");
 
+                var img = (await _imagesRepository.GetAllAsync(i => i.RoomId == model.Id)).FirstOrDefault();
+                if (img!= null)
+                {
+                    await _imagesRepository.DeleteImage(img);
+                }
+    
+
+                var file = model.Images;
+                var roomId = model.Id;
+
+                var image = _fileService.AddImageAsync(file, roomId);
 
                 _mapper.Map(model, room);
-
+                
                 await _roomRepository.EditRoom(room);
 
+                await _imagesRepository.AddImageAsync(image);
 
                 return "Number was edited successfully";
             }

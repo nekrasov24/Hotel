@@ -92,6 +92,21 @@ namespace RoomService.RoomRepository
             return _roomContext.RoomImages.FirstOrDefault(x => x.Id.Equals(id));
         }
 
+        public async Task EditImage(T obj)
+        {
+            _dbSet.Update(obj);
+            await SaveChangeAsync();
+        }
+
+        public async Task DeleteImage(T obj)
+        {
+            //var findImage = await _dbSet.FindAsync(id);
+            _dbSet.Remove(obj);
+            await SaveChangeAsync();
+
+
+        }
+
 
     }
 }

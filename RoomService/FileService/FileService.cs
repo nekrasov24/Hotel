@@ -29,9 +29,43 @@ namespace RoomService.FileService
         }
 
 
-       
 
-        public RoomImage AddImageToDbAsync(IFormFile imageRequest, Guid id)
+
+        public RoomImage AddImageAsync(IFormFile imageRequest, Guid roomId)
+        {
+            var imageId = Guid.NewGuid();
+            var imageName = imageId.ToString() + ".jpeg";
+            var imageSetPath = Path.Combine(_hostingEnvironment.ContentRootPath, @"files/");
+            var imagePath = imageSetPath + imageName;
+
+            var directory = new DirectoryInfo(imageSetPath);
+            if (!directory.Exists)
+            {
+                directory.Create();
+            }
+
+            using var image = Image.Load(imageRequest.OpenReadStream());
+            using var outputStream = new FileStream(imagePath, FileMode.Create);
+            image.Mutate(t => t.Resize(new ResizeOptions { Mode = ResizeMode.Max, Size = new Size(500, 500) }));
+            image.SaveAsJpeg(outputStream);
+            int length = (int)outputStream.Length;
+            byte[] bytes = new byte[length];
+            outputStream.Read(bytes, 0, length);
+
+            //var roomId = id;
+
+            var newImage = new RoomImage()
+            {
+                Id = imageId,
+                ImagePath = imagePath,
+                RoomId = roomId,
+            };
+
+            return newImage;
+
+        }
+
+        public RoomImage EditImageAsync(IFormFile imageRequest, Guid id)
         {
             var imageId = Guid.NewGuid();
             var imageName = id.ToString() + ".jpeg";
@@ -46,13 +80,11 @@ namespace RoomService.FileService
 
             using var image = Image.Load(imageRequest.OpenReadStream());
             using var outputStream = new FileStream(imagePath, FileMode.Create);
-            image.Mutate(t => t.Resize(200, 150));
+            image.Mutate(t => t.Resize(new ResizeOptions { Mode = ResizeMode.Max, Size = new Size(500, 500) }));
             image.SaveAsJpeg(outputStream);
             int length = (int)outputStream.Length;
             byte[] bytes = new byte[length];
             outputStream.Read(bytes, 0, length);
-
-            //var roomId = id;
 
             var newImage = new RoomImage()
             {
@@ -66,7 +98,7 @@ namespace RoomService.FileService
         }
 
 
-        
+
 
         public async Task<string> GetAllImageAsync(string filePath)
         {
