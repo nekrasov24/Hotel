@@ -10,7 +10,8 @@ namespace RoomService.FileService
     public interface IFileService
     {
         Task<string> GetAllImageAsync(string filePath);
-        RoomImage AddImageAsync(IFormFile imageRequest, Guid id);
+        RoomImage WriteImage(IFormFile imageRequest, Guid id);
+        void DeleteImage(string filePath);
     }
 }
 

@@ -13,7 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RoomService.FileService;
-using RoomService.ImagesService;
 using RoomService.MapperProfile;
 using RoomService.RoomModel;
 using RoomService.RoomRepository;
@@ -39,7 +38,6 @@ namespace RoomService
             services.AddScoped<IRepository<RoomImage, Guid>, Repository<RoomImage, Guid>>();
             services.AddScoped<IRoomService, RoomService.RoomService>();
             services.AddScoped<IFileService, FileService.FileService>();
-            services.AddScoped<IImagesService, ImagesService.ImagesService>();
             services.AddMapper();
 
 

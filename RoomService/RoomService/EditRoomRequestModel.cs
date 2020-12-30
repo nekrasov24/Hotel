@@ -31,6 +31,7 @@ namespace RoomService.RoomService
         [Required(ErrorMessage = "Room Type is required")]
         [Range(1, 4)]
         public RoomType RoomType { get; set; }
-        public IFormFile Images { get; set; }
+        public IFormFileCollection Images { get; set; }
+        public List<Guid> ListImageId { get; set; }
     }
 }

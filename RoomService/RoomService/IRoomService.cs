@@ -12,7 +12,7 @@ namespace RoomService.RoomService
         Task<string> DeleteRoomAsync(Guid id);
         Task<string> EditRoomAsync(EditRoomRequestModel model);
         Task<IEnumerable<RoomDTO>> GetAllRoomsAsync();
-        Room GetRoom(Guid id);
+        Task<RoomDTO> GetRoom(Guid id);
 
     }
 }

@@ -31,7 +31,7 @@ namespace RoomService.FileService
 
 
 
-        public RoomImage AddImageAsync(IFormFile imageRequest, Guid roomId)
+        public RoomImage WriteImage(IFormFile imageRequest, Guid roomId)
         {
             var imageId = Guid.NewGuid();
             var imageName = imageId.ToString() + ".jpeg";
@@ -46,13 +46,12 @@ namespace RoomService.FileService
 
             using var image = Image.Load(imageRequest.OpenReadStream());
             using var outputStream = new FileStream(imagePath, FileMode.Create);
-            image.Mutate(t => t.Resize(new ResizeOptions { Mode = ResizeMode.Max, Size = new Size(500, 500) }));
+            //image.Mutate(t => t.Resize(new ResizeOptions { Mode = ResizeMode.Max, Size = new Size(280, 280) }));
+            //image.Mutate(t => t.Resize(280,176));
             image.SaveAsJpeg(outputStream);
             int length = (int)outputStream.Length;
             byte[] bytes = new byte[length];
             outputStream.Read(bytes, 0, length);
-
-            //var roomId = id;
 
             var newImage = new RoomImage()
             {
@@ -64,26 +63,16 @@ namespace RoomService.FileService
             return newImage;
 
         }
-
-        
-
-
-
-
+       
         public async Task<string> GetAllImageAsync(string filePath)
         {
             try
             {
-                /*if (id == null) throw new Exception("Request is incorrect");
-                var findImage = (await _imagesRepository.GetAllAsync(image => image.RoomId == id)).FirstOrDefault();
-                if (findImage == null) throw new Exception("Image doesn't exists");
-                var filePath = findImage.ImagePath;*/
-
                 using (var fileStream = new FileStream(filePath, FileMode.Open))
                 {
                     int length = (int)fileStream.Length;
                     byte[] bytes = new byte[length];
-                    fileStream.Read(bytes, 0, length);
+                    await fileStream.ReadAsync(bytes, 0, length);
                     return Convert.ToBase64String(bytes);
                 }
             }
@@ -91,6 +80,11 @@ namespace RoomService.FileService
             {
                 return null;
             }
+        }
+
+        public void DeleteImage(string filePath)
+        {
+            File.Delete(filePath);
         }
 
 

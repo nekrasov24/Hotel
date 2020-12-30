@@ -139,7 +139,7 @@ namespace Authorization.UserService
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                DateOfBirth = user.DateOfBirth,
+                DateOfBirth = user.DateOfBirth.GetValueOrDefault().ToString("yyyy-MM-dd"),
                 Email = user.Email
 
             };

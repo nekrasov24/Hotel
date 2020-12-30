@@ -71,9 +71,9 @@ namespace RoomService.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetRoom(Guid id)
+        public async Task<IActionResult> GetRoom(Guid id)
         {
-            var room = _roomService.GetRoom(id);
+            var room = await _roomService.GetRoom(id);
             return Ok(room);
         }
     }

@@ -28,6 +28,7 @@ namespace RoomService.RoomService
         [Required(ErrorMessage = "Room Type is required")]
         [Range(1, 4)]
         public RoomType RoomType { get; set; }
+        [Required(ErrorMessage = "Images is required")]
         public IFormFileCollection Images { get; set; }
     }
 }

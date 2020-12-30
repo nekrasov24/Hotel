@@ -31,8 +31,7 @@ namespace RoomService.RoomService
         public async Task<string> AddARoomAsync(RoomRequestModel model)
         {
             try
-            {
-             
+            {             
                 var room = (await _roomRepository.GetAllAsync(r => r.Number.Equals(model.Number))).FirstOrDefault();
 
                 if (room != null) throw new Exception("Room already exists");
@@ -53,7 +52,7 @@ namespace RoomService.RoomService
                 var roomId = newRoom.Id;
                 foreach(var image in model.Images)
                 {
-                    var roomImage = _fileService.AddImageAsync(image, roomId);
+                    var roomImage = _fileService.WriteImage(image, roomId);
 
                     await _imagesRepository.AddImageAsync(roomImage);
                 }
@@ -70,27 +69,25 @@ namespace RoomService.RoomService
         {
             try
             {
-                var room = (await _roomRepository.GetAllAsync(r => r.Id == model.Id)).FirstOrDefault();
-
+                var room =  _roomRepository.GetRoomById(model.Id);
                 if (room == null) throw new Exception("Room doesn't exists");
 
-                var img = (await _imagesRepository.GetAllAsync(i => i.RoomId == model.Id)).FirstOrDefault();
-                if (img!= null)
+                foreach (var imageId in model.ListImageId)
                 {
-                    await _imagesRepository.DeleteImage(img);
+                    var deleteImage = (await _imagesRepository.GetAllAsync(i => i.Id == imageId)).FirstOrDefault();
+                    if (deleteImage == null) throw new Exception("Images don't exists");
+                    _fileService.DeleteImage(deleteImage.ImagePath);
+                    await _imagesRepository.DeleteImageAsync(deleteImage);
                 }
-    
-
-                var file = model.Images;
-                var roomId = model.Id;
-
-                var image = _fileService.AddImageAsync(file, roomId);
 
                 _mapper.Map(model, room);
-                
                 await _roomRepository.EditRoom(room);
 
-                await _imagesRepository.AddImageAsync(image);
+                foreach (var image in model.Images)
+                {
+                    var roomImage = _fileService.WriteImage(image, model.Id);
+                    await _imagesRepository.AddImageAsync(roomImage);
+                }
 
                 return "Number was edited successfully";
             }
@@ -107,9 +104,18 @@ namespace RoomService.RoomService
             try
             {
                 if (id == null) throw new Exception("Request is incorrect");
-                var find = await _roomRepository.FindRoomAsync(id);
+                var find = _roomRepository.GetRoomById(id);
                 if(find == null) throw new Exception("Room doesn't exists");
-                await _roomRepository.DeleteRoom(id);
+
+                if (find.RoomImages != null)
+                {
+                    foreach (var image in find.RoomImages)
+                    {
+                        _fileService.DeleteImage(image.ImagePath);
+                    }
+                }
+
+                await _roomRepository.DeleteRoom(find);
                 
                 return "Number was deleted successfully";
             }
@@ -121,10 +127,7 @@ namespace RoomService.RoomService
 
         public async Task<IEnumerable<RoomDTO>> GetAllRoomsAsync()
         {
-
             var getRooms = await (await _roomRepository.GetAllAsync(includes: (r) => r.Include(i => i.RoomImages))).ToArrayAsync();
-
-
             var roomModel = _mapper.Map<IEnumerable<RoomDTO>>(getRooms);
 
             foreach (var item in roomModel)
@@ -137,12 +140,18 @@ namespace RoomService.RoomService
 
             return roomModel;
         }
-        public Room GetRoom(Guid id)
+        public async Task<RoomDTO> GetRoom(Guid id)
         {
             var room = _roomRepository.GetRoomById(id);
             if (room == null) throw new Exception($"Room was not found");
 
-            return room;
+            var roomModel = _mapper.Map<RoomDTO>(room);
+            foreach (var img in roomModel.RoomImages)
+            {
+                img.ImagePath =  await _fileService.GetAllImageAsync(img.ImagePath);
+            }
+
+            return roomModel;
         }
 
         
@@ -163,6 +172,5 @@ namespace RoomService.RoomService
 
 
 
-        //return await(await _roomRepository.GetAllAsync(includes: (r) => r.Include(i => i.RoomImages))).ToListAsync();
     }
 }

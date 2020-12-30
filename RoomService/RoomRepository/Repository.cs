@@ -47,10 +47,10 @@ namespace RoomService.RoomRepository
             });
         }
 
-        public async Task DeleteRoom(Tkey id)
+        public async Task DeleteRoom(T obj)
         {
-            var findRoom = await _dbSet.FindAsync(id);
-            _dbSet.Remove(findRoom);
+           
+            _dbSet.Remove(obj);
             await SaveChangeAsync();
             
 
@@ -70,7 +70,7 @@ namespace RoomService.RoomRepository
 
         public Room GetRoomById(Tkey id)
         {
-            return _roomContext.Rooms.FirstOrDefault(x => x.Id.Equals(id));
+            return  _roomContext.Rooms.Include(x=>x.RoomImages).FirstOrDefault(x => x.Id.Equals(id));
         }
 
         public IQueryable<T> GetRoomAsync(bool asNoTracking = true)
@@ -92,15 +92,8 @@ namespace RoomService.RoomRepository
             return _roomContext.RoomImages.FirstOrDefault(x => x.Id.Equals(id));
         }
 
-        public async Task EditImage(T obj)
+        public async Task DeleteImageAsync(T obj)
         {
-            _dbSet.Update(obj);
-            await SaveChangeAsync();
-        }
-
-        public async Task DeleteImage(T obj)
-        {
-            //var findImage = await _dbSet.FindAsync(id);
             _dbSet.Remove(obj);
             await SaveChangeAsync();
         }
@@ -110,16 +103,5 @@ namespace RoomService.RoomRepository
             _dbSet.AddRange(obj);
             await SaveChangeAsync();
         }
-
-        public async Task DeleteImageAsync(T obj)
-        {
-            //var findImage = await _dbSet.FindAsync(id);
-            _dbSet.Remove(obj);
-            await SaveChangeAsync();
-        }
-
-
-
-
     }
 }

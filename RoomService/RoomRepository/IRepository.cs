@@ -14,16 +14,14 @@ namespace RoomService.RoomRepository
         Task AddRoomAsync(T obj);
         Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null,
             Func<IQueryable<T>, IIncludableQueryable<T, object>> includes = null);
-        Task DeleteRoom(Tkey id);
+        Task DeleteRoom(T obj);
         Task EditRoom(T room);
         Task<T> FindRoomAsync(Tkey id);
         public Room GetRoomById(Tkey id);
         IQueryable<T> GetRoomAsync(bool asNoTracking = false);
         Task AddImageAsync(T obj);
         RoomImage GetImageById(Tkey id);
-        Task EditImage(T obj);
-        Task DeleteImage(T id);
+        Task DeleteImageAsync(T id);
         Task AddRangeImagesAsync(List<T> obj);
-        Task DeleteImageAsync(T obj);
     }
 }
