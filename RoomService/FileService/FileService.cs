@@ -64,24 +64,6 @@ namespace RoomService.FileService
 
         }
        
-        public async Task<string> GetAllImageAsync(string filePath)
-        {
-            try
-            {
-                using (var fileStream = new FileStream(filePath, FileMode.Open))
-                {
-                    int length = (int)fileStream.Length;
-                    byte[] bytes = new byte[length];
-                    await fileStream.ReadAsync(bytes, 0, length);
-                    return Convert.ToBase64String(bytes);
-                }
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-
         public void DeleteImage(string filePath)
         {
             File.Delete(filePath);

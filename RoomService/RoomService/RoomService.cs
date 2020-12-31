@@ -130,13 +130,6 @@ namespace RoomService.RoomService
             var getRooms = await (await _roomRepository.GetAllAsync(includes: (r) => r.Include(i => i.RoomImages))).ToArrayAsync();
             var roomModel = _mapper.Map<IEnumerable<RoomDTO>>(getRooms);
 
-            foreach (var item in roomModel)
-            {
-                foreach (var imageModel in item.RoomImages)
-                {
-                    imageModel.ImagePath = await _fileService.GetAllImageAsync(imageModel.ImagePath);
-                }
-            }
 
             return roomModel;
         }
@@ -146,10 +139,10 @@ namespace RoomService.RoomService
             if (room == null) throw new Exception($"Room was not found");
 
             var roomModel = _mapper.Map<RoomDTO>(room);
-            foreach (var img in roomModel.RoomImages)
+            /*foreach (var img in roomModel.RoomImages)
             {
                 img.ImagePath =  await _fileService.GetAllImageAsync(img.ImagePath);
-            }
+            }*/
 
             return roomModel;
         }
