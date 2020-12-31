@@ -55,6 +55,7 @@ namespace RoomService
             }
 
             app.UseHttpsRedirection();
+
             var path = Path.Combine(env.ContentRootPath, "files");
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -63,8 +64,6 @@ namespace RoomService
             });
 
             app.UseRouting();
-
-            
 
             app.UseAuthorization();
 
