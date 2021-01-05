@@ -72,22 +72,30 @@ namespace RoomService.RoomService
                 var room =  _roomRepository.GetRoomById(model.Id);
                 if (room == null) throw new Exception("Room doesn't exists");
 
-                foreach (var imageId in model.ListImageId)
+                if(model.ListImageId?.Count > 0)
                 {
-                    var deleteImage = (await _imagesRepository.GetAllAsync(i => i.Id == imageId)).FirstOrDefault();
-                    if (deleteImage == null) throw new Exception("Images don't exists");
-                    _fileService.DeleteImage(deleteImage.ImagePath);
-                    await _imagesRepository.DeleteImageAsync(deleteImage);
+                    foreach (var imageId in model.ListImageId)
+                    {
+                        var deleteImage = (await _imagesRepository.GetAllAsync(i => i.Id == imageId)).FirstOrDefault();
+                        if (deleteImage == null) throw new Exception("Images don't exists");
+                        _fileService.DeleteImage(deleteImage.ImagePath);
+                        await _imagesRepository.DeleteImageAsync(deleteImage);
+                    }
                 }
+                
 
                 _mapper.Map(model, room);
                 await _roomRepository.EditRoom(room);
 
-                foreach (var image in model.Images)
+                if (model.Images?.Count > 0)
                 {
-                    var roomImage = _fileService.WriteImage(image, model.Id);
-                    await _imagesRepository.AddImageAsync(roomImage);
+                    foreach (var image in model.Images)
+                    {
+                        var roomImage = _fileService.WriteImage(image, model.Id);
+                        await _imagesRepository.AddImageAsync(roomImage);
+                    }
                 }
+                
 
                 return "Number was edited successfully";
             }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using RoomService.RoomModel;
+using RoomService.ValidationAttributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -31,6 +32,7 @@ namespace RoomService.RoomService
         [Required(ErrorMessage = "Room Type is required")]
         [Range(1, 4)]
         public RoomType RoomType { get; set; }
+        //[MaxFileSize(5*1024*1024)]
         public IFormFileCollection Images { get; set; }
         public List<Guid> ListImageId { get; set; }
     }

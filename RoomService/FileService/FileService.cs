@@ -47,7 +47,7 @@ namespace RoomService.FileService
             using var image = Image.Load(imageRequest.OpenReadStream());
             using var outputStream = new FileStream(imagePath, FileMode.Create);
             //image.Mutate(t => t.Resize(new ResizeOptions { Mode = ResizeMode.Max, Size = new Size(280, 280) }));
-            //image.Mutate(t => t.Resize(280,176));
+            image.Mutate(t => t.Resize(320,240));
             image.SaveAsJpeg(outputStream);
             int length = (int)outputStream.Length;
             byte[] bytes = new byte[length];
