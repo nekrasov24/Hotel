@@ -147,10 +147,6 @@ namespace RoomService.RoomService
             if (room == null) throw new Exception($"Room was not found");
 
             var roomModel = _mapper.Map<RoomDTO>(room);
-            /*foreach (var img in roomModel.RoomImages)
-            {
-                img.ImagePath =  await _fileService.GetAllImageAsync(img.ImagePath);
-            }*/
 
             return roomModel;
         }

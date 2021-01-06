@@ -2,29 +2,33 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace RoomService.ValidationAttributes
 {
-    public class MaxFileSizeAttribute : ValidationAttribute
+    public class AllowedExtensionsAttribute : ValidationAttribute
     {
-        private readonly int _maxFileSize;
-        public MaxFileSizeAttribute(int maxFileSize)
+        private readonly string[] _extensions;
+        public AllowedExtensionsAttribute(string[] extensions)
         {
-            _maxFileSize = maxFileSize;
+            _extensions = extensions;
         }
 
         protected override ValidationResult IsValid(
         object value, ValidationContext validationContext)
         {
             var files = value as IFormFileCollection;
-            if (files != null) {
+
+            if (files != null)
+            {
                 foreach (var file in files)
                 {
                     if (file != null)
                     {
-                        if (file?.Length > _maxFileSize)
+                        var extension = Path.GetExtension(file?.FileName);
+                        if (!_extensions.Contains(extension.ToLower()))
                         {
                             return new ValidationResult(GetErrorMessage());
                         }
@@ -38,7 +42,7 @@ namespace RoomService.ValidationAttributes
 
         public string GetErrorMessage()
         {
-            return $"Maximum allowed file size is { _maxFileSize} bytes.";
+            return $"This photo extension is not allowed!";
         }
     }
 }

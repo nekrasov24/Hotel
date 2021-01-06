@@ -15,7 +15,7 @@ namespace RoomService.RoomService
         public Guid Id { get; set; }
         
         [Required(ErrorMessage = "Name is required")]
-        [StringLength(30)]
+        [StringLength(10)]
         public string Name { get; set; }
         [Required(ErrorMessage = "Number is required")]
         [Range(1, 100)]
@@ -32,7 +32,8 @@ namespace RoomService.RoomService
         [Required(ErrorMessage = "Room Type is required")]
         [Range(1, 4)]
         public RoomType RoomType { get; set; }
-        //[MaxFileSize(5*1024*1024)]
+        [MaxFileSize(5*1024*1024)]
+        [AllowedExtensions(new string[] { ".jpg", ".png", ".jpeg" })]
         public IFormFileCollection Images { get; set; }
         public List<Guid> ListImageId { get; set; }
     }

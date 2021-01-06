@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using RoomService.RoomModel;
+using RoomService.ValidationAttributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +12,7 @@ namespace RoomService.RoomService
     public class RoomRequestModel
     {
         [Required(ErrorMessage = "Name is required", AllowEmptyStrings = false)]
-        [StringLength(30)]
+        [StringLength(10)]
         public string Name { get; set; }
         [Required(ErrorMessage = "Number is required")]
         [Range(1, 100)]
@@ -29,6 +30,8 @@ namespace RoomService.RoomService
         [Range(1, 4)]
         public RoomType RoomType { get; set; }
         [Required(ErrorMessage = "Images is required")]
+        [MaxFileSize(5 * 1024 * 1024)]
+        [AllowedExtensions(new string[] { ".jpg", ".png", ".jpeg" })]
         public IFormFileCollection Images { get; set; }
     }
 }
