@@ -34,6 +34,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     volumes:
       - ~/.aspnet/https:/https:ro
+
   test:
     image: test
     container_name: test
@@ -68,3 +69,21 @@ services:
     volumes:
       - ~/.aspnet/https:/https:ro
       - ~/.aspnet/files:/app/files:rw
+
+  log-service:
+    image: log-service:latest
+    container_name: log-service
+    restart: always
+    ports:
+      - 87:80
+      - 55341:5341
+    build:
+      context: ./LogService/.
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=1111
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+      - ~/.aspnet/https:/https:ro
+      - ~/.aspnet/logs:/app/logs:rw
