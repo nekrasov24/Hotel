@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RoomService.Publisher;
 using RoomService.RoomModel;
 using RoomService.RoomService;
 
@@ -14,9 +15,11 @@ namespace RoomService.Controllers
     public class RoomsController : ControllerBase
     {
         private readonly IRoomService _roomService;
-        public RoomsController(IRoomService roomService)
+        private readonly IPublisher _publisher;
+        public RoomsController(IRoomService roomService, IPublisher publisher)
         {
             _roomService = roomService;
+            _publisher = publisher;
         }
 
         [HttpDelete("{id}")]
@@ -75,6 +78,11 @@ namespace RoomService.Controllers
         {
             var room = await _roomService.GetRoom(id);
             return Ok(room);
+        }
+        [HttpPost("test")]
+        public async Task Send()
+        {
+            await _publisher.Publish();
         }
     }
 }

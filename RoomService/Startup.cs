@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using EasyNetQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RoomService.FileService;
 using RoomService.MapperProfile;
+using RoomService.Publisher;
 using RoomService.RoomModel;
 using RoomService.RoomRepository;
 using RoomService.RoomService;
@@ -35,11 +37,15 @@ namespace RoomService
         public void ConfigureServices(IServiceCollection services)
         {
             string connectionstring = Configuration.GetConnectionString("DefaultConnectionString");
+            string connectionRabbitMQ = Configuration.GetConnectionString("Config");
+
+            services.AddSingleton<IAdvancedBus>(RabbitHutch.CreateBus(connectionRabbitMQ).Advanced);
             services.AddDbContext<RoomContext>(options => options.UseSqlServer(connectionstring));
             services.AddScoped<IRepository<Room, Guid>, Repository<Room, Guid>>();
             services.AddScoped<IRepository<RoomImage, Guid>, Repository<RoomImage, Guid>>();
             services.AddScoped<IRoomService, RoomService.RoomService>();
             services.AddScoped<IFileService, FileService.FileService>();
+            services.AddScoped<IPublisher, Publisher.Publisher>();
             services.AddMapper();
 
 
