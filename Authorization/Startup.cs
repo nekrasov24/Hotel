@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using Authorization.Dal;
 using Authorization.HeaderService;
 using Authorization.MapperProfile;
+using Authorization.Publisher;
 using Authorization.UserRepository;
 using Authorization.UserService;
+using EasyNetQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -37,9 +39,12 @@ namespace Authorization
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<UserContext>(options => options.UseSqlServer(connection));
+            string connectionRabbitMQ = Configuration.GetConnectionString("Config");
+            services.AddSingleton(RabbitHutch.CreateBus(connectionRabbitMQ).Advanced);
             services.AddScoped<IHeaderService, HeaderService.HeaderService>();
             services.AddScoped<IUserService, UserService.UserService>();
             services.AddScoped<IRepository<User, Guid>, Repository<User, Guid>>();
+            services.AddScoped<IPublisher, Publisher.Publisher>();
             services.AddMapper();
             services.AddCors(options =>
             {

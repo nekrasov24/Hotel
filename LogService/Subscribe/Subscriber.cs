@@ -1,6 +1,7 @@
 ﻿using EasyNetQ;
 using EasyNetQ.Consumer;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,13 +22,17 @@ namespace LogService.Subscribe
 
         public void Subscribe()
         {
-            var queue = _bus.QueueDeclare("MyQueue");
-            _bus.Consume(queue, registration =>
-            {
-                registration.Add<PublishMessage>((message, info) => { Console.WriteLine("Body: {0}", message.Body); });
-            });
-            _logger.LogInformation("Rammstein");
-            //_bus.PubSub.Subscribe<PublishMessage>("my_subscription_id", msg => Console.WriteLine(msg.Text), new Action<ISubscriptionConfiguration>(o => o.WithTopic("asd")));
+            var queue = _bus.QueueDeclare("PublishMessage");
+
+            _bus.Consume<string>(queue, (msg, info) => DeserializeTest(msg.Body));
+
+        }
+
+        private void DeserializeTest(string bodyMessage)
+        {
+            var message = JsonConvert.DeserializeObject<PublishMessage>(bodyMessage);
+            Console.WriteLine(message.Text);
+            _logger.LogInformation(message.Text);
         }
     }     
 }

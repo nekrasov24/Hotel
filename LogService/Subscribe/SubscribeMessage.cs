@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RoomService.Publisher
+namespace LogService.Subscribe
 {
-    public interface IPublisher
+
+    public class PublishMessage
     {
-        Task Publish(string mes);
+        public string Text { get; set; }
     }
 }

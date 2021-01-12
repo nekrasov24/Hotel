@@ -39,7 +39,7 @@ namespace RoomService
             string connectionstring = Configuration.GetConnectionString("DefaultConnectionString");
             string connectionRabbitMQ = Configuration.GetConnectionString("Config");
 
-            services.AddSingleton<IAdvancedBus>(RabbitHutch.CreateBus(connectionRabbitMQ).Advanced);
+            services.AddSingleton(RabbitHutch.CreateBus(connectionRabbitMQ).Advanced);
             services.AddDbContext<RoomContext>(options => options.UseSqlServer(connectionstring));
             services.AddScoped<IRepository<Room, Guid>, Repository<Room, Guid>>();
             services.AddScoped<IRepository<RoomImage, Guid>, Repository<RoomImage, Guid>>();

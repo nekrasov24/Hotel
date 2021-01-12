@@ -1,13 +1,12 @@
 ﻿using EasyNetQ;
 using EasyNetQ.Topology;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RoomService.Publisher
+namespace Authorization.Publisher
 {
     public class Publisher : IPublisher
     {
@@ -24,15 +23,11 @@ namespace RoomService.Publisher
             var queue2 = _bus.QueueDeclare(queueExhange);
             var exchange = _bus.ExchangeDeclare(queueExhange, ExchangeType.Topic);
             _bus.Bind(exchange, queue2, "A.*");
-            var newMessage = new PublishMessage() { Text = "Hello"};
+            var newMessage = new PublishMessage() { Text = "Hello" };
             var topic = $"ProjectId.CabinId";
             var yourMessage = new Message<string>(JsonConvert.SerializeObject(new PublishMessage { Text = mes }));
-            await  _bus.PublishAsync(exchange, "A.*", true, yourMessage);
+            await _bus.PublishAsync(exchange, "A.*", true, yourMessage);
 
         }
-
-
-
-
     }
 }

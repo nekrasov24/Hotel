@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using RoomService.FileService;
+using RoomService.Publisher;
 using RoomService.RoomModel;
 using RoomService.RoomRepository;
 using System;
@@ -18,14 +19,16 @@ namespace RoomService.RoomService
         private readonly IMapper _mapper;
         private readonly IFileService _fileService;
         private readonly IRepository<RoomImage, Guid> _imagesRepository;
+        private readonly IPublisher _publisher;
 
         public RoomService(IRepository<Room, Guid> roomRepository, IMapper mapper, IFileService fileService,
-            IRepository<RoomImage, Guid> imagesRepository)
+            IRepository<RoomImage, Guid> imagesRepository, IPublisher publisher)
         {
             _roomRepository = roomRepository;
             _mapper = mapper;
             _fileService = fileService;
             _imagesRepository = imagesRepository;
+            _publisher = publisher;
         }
 
         public async Task<string> AddARoomAsync(RoomRequestModel model)
@@ -56,7 +59,8 @@ namespace RoomService.RoomService
 
                     await _imagesRepository.AddImageAsync(roomImage);
                 }
-
+                var response = $"Number id: {newRoom.Id}: {newRoom.Name} was added successfully";
+                await _publisher.Publish(response);
                 return "Number was added successfully";
             }
             catch(Exception ex)

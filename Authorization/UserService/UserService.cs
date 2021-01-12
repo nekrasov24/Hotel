@@ -1,6 +1,7 @@
 ﻿using Authorization.Constants;
 using Authorization.Dal;
 using Authorization.HeaderService;
+using Authorization.Publisher;
 using Authorization.UserRepository;
 using AutoMapper;
 using Elskom.Generic.Libs;
@@ -22,12 +23,15 @@ namespace Authorization.UserService
         private readonly IHeaderService _headerService;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
-        public UserService(IRepository<User, Guid> repository, IConfiguration configuration, IMapper mapper, IHeaderService headerService)
+        private readonly IPublisher _publisher;
+        public UserService(IRepository<User, Guid> repository, IConfiguration configuration, IMapper mapper, IHeaderService headerService,
+            IPublisher publisher)
         {
             _userRepository = repository;
             _configuration = configuration;
             _headerService = headerService;
             _mapper = mapper;
+            _publisher = publisher;
         }
         public async Task<string> Register(RegisterRequest model)
         {
@@ -49,7 +53,10 @@ namespace Authorization.UserService
                 };
 
                 await _userRepository.AddUserAsync(newUser);
+
                 var token = GenerateJwtToken(newUser);
+                var mes = $" {newUser.FirstName} {newUser.LastName} registred successfully";
+                await _publisher.Publish(mes);
                 return token;
             }
             catch(Exception ex)
@@ -90,7 +97,10 @@ namespace Authorization.UserService
                 if (user == null) throw new Exception("Email or Password is incorrect");
                 var verified = BCrypt.Net.BCrypt.Verify(model.Password, user.Password);
                 if (!verified) throw new Exception("Email or Password is incorrect");
+
                 var token = GenerateJwtToken(user);
+                var mes = $" Id: {user.Id}: {user.FirstName} {user.LastName} logged successfully";
+                await _publisher.Publish(mes);
                 return token;
             }
             catch(Exception ex)

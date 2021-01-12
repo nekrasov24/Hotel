@@ -82,7 +82,8 @@ namespace RoomService.Controllers
         [HttpPost("test")]
         public async Task Send()
         {
-            await _publisher.Publish();
+            var room = "new room";
+            await _publisher.Publish(room);
         }
     }
 }
