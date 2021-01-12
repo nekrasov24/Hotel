@@ -99,7 +99,7 @@ namespace Authorization.UserService
                 if (!verified) throw new Exception("Email or Password is incorrect");
 
                 var token = GenerateJwtToken(user);
-                var mes = $" Id: {user.Id}: {user.FirstName} {user.LastName} logged successfully";
+                var mes = $" Id: {user.Id}: {user.FirstName} {user.Email} logged successfully";
                 await _publisher.Publish(mes);
                 return token;
             }

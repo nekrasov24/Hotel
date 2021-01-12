@@ -8,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Core;
+using Serilog.Events;
+using Serilog.Filters;
 
 namespace LogService
 {
@@ -15,10 +18,15 @@ namespace LogService
     {
         public static int Main(string[] args)
         {
+            var ls = new LoggingLevelSwitch();
+            var isService = Matching.FromSource("LogService.Subscribe");
+            ls.MinimumLevel = ((LogEventLevel)1 + (int)LogEventLevel.Fatal);
+
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .WriteTo.File(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs/log.txt"), fileSizeLimitBytes: 1_000_000,
+                .Filter.ByIncludingOnly(isService)
+                .WriteTo
+                .File(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs/log.txt"), fileSizeLimitBytes: 1_000_000,
                 rollOnFileSizeLimit: true,
                 shared: true,
                 flushToDiskInterval: TimeSpan.FromSeconds(1))
@@ -46,6 +54,10 @@ namespace LogService
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                }
+            //    }).UseSerilog((hostingContext, loggerConfig) =>
+            //loggerConfig.ReadFrom.Configuration(hostingContext.Configuration)
+        );
+            
     }
 }

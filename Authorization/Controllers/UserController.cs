@@ -80,5 +80,19 @@ namespace Authorization.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("logout")]
+        public IActionResult LogOut()
+        {
+            try
+            {
+                var resp = "log out";
+                return Ok(resp);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
