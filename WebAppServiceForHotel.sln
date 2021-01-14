@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoomService", "RoomService\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{4B386D04-6E81-4BF4-A774-FD787951F0B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogService", "LogService\LogService.csproj", "{A2DC17A3-77AE-4840-87BE-4496724AFBF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogService", "LogService\LogService.csproj", "{A2DC17A3-77AE-4840-87BE-4496724AFBF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingService", "BookingService\BookingService.csproj", "{8397E475-6CE8-44D8-9DCE-0719CF840DDD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{A2DC17A3-77AE-4840-87BE-4496724AFBF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2DC17A3-77AE-4840-87BE-4496724AFBF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2DC17A3-77AE-4840-87BE-4496724AFBF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8397E475-6CE8-44D8-9DCE-0719CF840DDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8397E475-6CE8-44D8-9DCE-0719CF840DDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8397E475-6CE8-44D8-9DCE-0719CF840DDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8397E475-6CE8-44D8-9DCE-0719CF840DDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

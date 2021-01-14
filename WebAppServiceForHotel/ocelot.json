@@ -273,6 +273,27 @@
       },
       "ReRoutesCaseSensitive": false,
       "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate": "/api/booking/book",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "booking-service",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/api/book",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "Admin", "User" ]
+      },
+      "ReRoutesCaseSensitive": false,
+      "DangerousAcceptAnyServerCertificateValidator": true,
+      "AddHeadersToRequest": {
+        "claims_UserId": "Claims[jti] > value > |"
+      }
     }
 
   ]

@@ -6,6 +6,7 @@ using RoomService.FileService;
 using RoomService.Publisher;
 using RoomService.RoomModel;
 using RoomService.RoomRepository;
+using RoomService.Subscriber;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +47,8 @@ namespace RoomService.RoomService
                     NumberOfPeople = model.NumberOfPeople,
                     PriceForNight = model.PriceForNight,
                     Description = model.Description,
-                    RoomType = model.RoomType
+                    RoomType = model.RoomType,
+                    Status = Status.Free
                     
                 };
 
@@ -155,23 +157,14 @@ namespace RoomService.RoomService
             return roomModel;
         }
 
-        
+        public async Task ChangeStatus(TransferReservation reservation)
+        {
+            var room = _roomRepository.GetRoomById(reservation.RoomId);
+            room.Status = Status.Booked;      
+            await _roomRepository.EditRoom(room);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        }
 
     }
 }

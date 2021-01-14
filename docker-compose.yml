@@ -99,3 +99,33 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+  mongo:
+    image: mongo
+    container_name: mongoBookService
+    restart: always
+    ports:
+      - 27017:27017
+  mongo-express:
+    image: mongo-express
+    container_name: mongoExpress
+    restart: always
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongo
+  booking-service:
+    image: booking-service:latest
+    container_name: booking-service
+    restart: always
+    ports:
+      - 89:80
+      - 4445:443
+    build:
+      context: ./BookingService/.
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=1111
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+      - ~/.aspnet/https:/https:ro

@@ -1,4 +1,5 @@
 ﻿using RoomService.RoomModel;
+using RoomService.Subscriber;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace RoomService.RoomService
         Task<string> EditRoomAsync(EditRoomRequestModel model);
         Task<IEnumerable<RoomDTO>> GetAllRoomsAsync();
         Task<RoomDTO> GetRoom(Guid id);
+        Task ChangeStatus(TransferReservation reservation);
 
     }
 }

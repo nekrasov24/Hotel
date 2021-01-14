@@ -16,5 +16,7 @@ namespace RoomService.RoomService
         public string Description { get; set; }
         public RoomType RoomType { get; set; }
         public List<RoomImageModel> RoomImages { get; set; }
+        public Status Status { get; set; }
+
     }
 }
