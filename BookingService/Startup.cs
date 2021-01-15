@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookingService.BookingService;
 using BookingService.HeaderService;
+using BookingService.MapperProfile;
 using BookingService.Model;
 using BookingService.Publisher;
 using EasyNetQ;
@@ -40,6 +41,7 @@ namespace BookingService
             services.AddScoped<IBookingService, BookingService.BookingService>();
 
             services.AddHttpContextAccessor();
+            services.AddMapper();
             services.AddControllers();
         }
 

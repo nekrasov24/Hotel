@@ -22,8 +22,43 @@ namespace BookingService.Controllers
         [HttpPost("book")]
         public async Task<IActionResult> CreateReservation(BookingRequestModel model)
         {
-            var response = await _bookingService.CreateReservation(model);
-            return Ok(response);
+            try
+            {
+                var response = await _bookingService.CreateReservation(model);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> CancelReservation(Guid id)
+        {
+            try
+            {
+                var response = await _bookingService.CancelReservation(id);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("get")]
+        public IActionResult GetReservation()
+        {
+            try
+            {
+                var response = _bookingService.GetReservation();
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

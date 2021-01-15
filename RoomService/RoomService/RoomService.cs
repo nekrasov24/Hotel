@@ -162,8 +162,13 @@ namespace RoomService.RoomService
             var room = _roomRepository.GetRoomById(reservation.RoomId);
             room.Status = Status.Booked;      
             await _roomRepository.EditRoom(room);
+        }
 
-
+        public async Task ChangeStatusToFree(CancelReservation reservation)
+        {
+            var room = _roomRepository.GetRoomById(reservation.RoomId);
+            room.Status = Status.Free;
+            await _roomRepository.EditRoom(room);
         }
 
     }

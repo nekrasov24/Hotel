@@ -15,6 +15,7 @@ namespace RoomService.RoomService
         Task<IEnumerable<RoomDTO>> GetAllRoomsAsync();
         Task<RoomDTO> GetRoom(Guid id);
         Task ChangeStatus(TransferReservation reservation);
+        Task ChangeStatusToFree(CancelReservation reservation);
 
     }
 }

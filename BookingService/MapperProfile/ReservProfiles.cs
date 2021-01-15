@@ -13,6 +13,7 @@ namespace BookingService.MapperProfile
         public ReservProfiles()
         {
             CreateMap<Reservation, TransferReservation>();
+            CreateMap<Reservation, ReservationDTO>();
 
         }
     }

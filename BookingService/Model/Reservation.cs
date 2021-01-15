@@ -10,6 +10,7 @@ namespace BookingService.Model
     public class Reservation
     {
         [BsonId]
+        [BsonElement("Id")]
         [BsonRepresentation(BsonType.String)]
         public Guid Id { get; set; }
         [BsonElement("UserId")]

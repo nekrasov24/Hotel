@@ -58,6 +58,7 @@ namespace RoomService
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ISubscriber subscriber)
         {
             subscriber.Subscribe();
+            subscriber.SubscribeCancel();
 
             if (env.IsDevelopment())
             {

@@ -21,7 +21,20 @@ namespace BookingService.Publisher
 
         public async Task Publish(TransferReservation reservation)
         {
-            var queueExhange = nameof(Reservation);
+            var queueExhange = nameof(TransferReservation);
+            var queue2 = _bus.QueueDeclare(queueExhange);
+            var exchange = _bus.ExchangeDeclare(queueExhange, ExchangeType.Topic);
+            _bus.Bind(exchange, queue2, "A.*");
+
+            var topic = $"ProjectId.CabinId";
+            var yourMessage = new Message<string>(JsonConvert.SerializeObject(reservation));
+            await _bus.PublishAsync(exchange, "A.*", true, yourMessage);
+
+        }
+
+        public async Task CancelPublish(CancelReservation reservation)
+        {
+            var queueExhange = nameof(CancelReservation);
             var queue2 = _bus.QueueDeclare(queueExhange);
             var exchange = _bus.ExchangeDeclare(queueExhange, ExchangeType.Topic);
             _bus.Bind(exchange, queue2, "A.*");

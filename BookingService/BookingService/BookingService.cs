@@ -1,4 +1,5 @@
-﻿using BookingService.HeaderService;
+﻿using AutoMapper;
+using BookingService.HeaderService;
 using BookingService.Model;
 using BookingService.Publisher;
 using MongoDB.Driver;
@@ -14,51 +15,97 @@ namespace BookingService.BookingService
         private readonly IMongoCollection<Reservation> _reservation;
         private readonly IHeaderService _headerService;
         private readonly IPublisher _publicher;
+        private readonly IMapper _mapper;
 
-        public BookingService(IReservationSettings settings, IHeaderService headerService, IPublisher publicher)
+        public BookingService(IReservationSettings settings, IHeaderService headerService, IPublisher publicher, IMapper mapper)
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
             _reservation = database.GetCollection<Reservation>(settings.ReservationCollectionName);
             _headerService = headerService;
             _publicher = publicher;
+            _mapper = mapper;
         }
         public async Task<string> CreateReservation(BookingRequestModel model)
         {
-            var startDate = DateTime.UtcNow;
-            var finishDate = startDate.AddMinutes(56);
-
-            var userId = _headerService.GetUserId();
-            var newReservation = new Reservation()
+            try
             {
-                Id = Guid.NewGuid(),
-                RoomId = model.RoomId,
-                UserId = userId,
-                StartDateOfBooking = startDate,
-                FinishDateOfBooking = finishDate,
-                ReservStartDate = model.ReservStartDate,
-                ReservFinishedDate = model.ReservFinishedDate
-            };
+                var filter = Builders<Reservation>.Filter.Eq("RoomId", model.RoomId);
+                var reservation = _reservation.Find(filter).FirstOrDefault();
+                if (reservation != null) throw new Exception("Room can't be booked");
 
-            _reservation.InsertOne(newReservation);
+                var startDate = DateTime.UtcNow;
+                var finishDate = startDate.AddMinutes(2);
+                var userId = _headerService.GetUserId();
+                var newReservation = new Reservation()
+                {
+                    Id = Guid.NewGuid(),
+                    RoomId = model.RoomId,
+                    UserId = userId,
+                    StartDateOfBooking = startDate,
+                    FinishDateOfBooking = finishDate,
+                    ReservStartDate = model.ReservStartDate,
+                    ReservFinishedDate = model.ReservFinishedDate
+                };
 
-
-            var newTransferReservation = new TransferReservation()
+                _reservation.InsertOne(newReservation);
+                var newTransferReservation = new TransferReservation()
+                {
+                    RoomId = newReservation.RoomId
+                };
+                await _publicher.Publish(newTransferReservation);
+                return "Reservation was added successfully";
+            }
+            catch (Exception ex)
             {
-                Id =newReservation.Id,
-                RoomId = newReservation.RoomId,
-                UserId = newReservation.UserId,
-                StartDateOfBooking = newReservation.StartDateOfBooking,
-                FinishDateOfBooking = newReservation.StartDateOfBooking,
-                ReservStartDate = newReservation.ReservStartDate,
-                ReservFinishedDate = newReservation.ReservFinishedDate
-            };
-
-            await _publicher.Publish(newTransferReservation);
-            
-            return "";
+                throw ex;
+            }
         }
 
-        
+        public async Task<string> CancelReservation(Guid id)
+        {
+            try
+            {
+                var filter = Builders<Reservation>.Filter.Eq("Id", id);
+                var reservation = _reservation.Find(filter).FirstOrDefault();
+                if(reservation == null) throw new Exception("Book doesn't existst");
+
+                var newTransferReservation = new CancelReservation()
+                {
+                    RoomId = reservation.RoomId
+                };
+
+                await _publicher.CancelPublish(newTransferReservation);
+
+
+                _reservation.DeleteOne(Builders<Reservation>.Filter.Eq("Id", id));
+
+                return "";
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+        public ReservationDTO GetReservation()
+        {
+            try
+            {
+                var userId = _headerService.GetUserId();
+
+                var filter = Builders<Reservation>.Filter.Eq("UserId", userId);
+                var reservation = _reservation.Find(filter).FirstOrDefault();
+                if (reservation == null) throw new Exception("Book doesn't existst");
+                var modelReservation = _mapper.Map<ReservationDTO>(reservation);
+
+                return modelReservation;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }        
     }
 }

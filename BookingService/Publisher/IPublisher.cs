@@ -10,5 +10,6 @@ namespace BookingService.Publisher
     public interface IPublisher
     {
         Task Publish(TransferReservation reservation);
+        Task CancelPublish(CancelReservation reservation);
     }
 }

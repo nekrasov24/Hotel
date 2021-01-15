@@ -8,5 +8,7 @@ namespace BookingService.BookingService
     public interface IBookingService
     {
         Task<string> CreateReservation(BookingRequestModel model);
+        Task<string> CancelReservation(Guid id);
+        ReservationDTO GetReservation();
     }
 }

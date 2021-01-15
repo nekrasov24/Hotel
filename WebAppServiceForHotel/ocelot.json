@@ -108,7 +108,7 @@
           "Port": 443
         }
       ],
-      "UpstreamPathTemplate": "/api/{id}",
+      "UpstreamPathTemplate": "/api/rooms/{id}",
       "UpstreamHttpMethod": [ "Delete" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
@@ -290,6 +290,44 @@
         "AllowedScopes": [ "Admin", "User" ]
       },
       "ReRoutesCaseSensitive": false,
+      "DangerousAcceptAnyServerCertificateValidator": true,
+      "AddHeadersToRequest": {
+        "claims_UserId": "Claims[jti] > value > |"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/booking/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "booking-service",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/api/booking/{id}",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "Admin", "User" ]
+      },
+      "ReRoutesCaseSensitive": false,
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate": "/api/booking/get",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "booking-service",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/api/booking/get",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "Admin", "User" ]
+      },
       "DangerousAcceptAnyServerCertificateValidator": true,
       "AddHeadersToRequest": {
         "claims_UserId": "Claims[jti] > value > |"

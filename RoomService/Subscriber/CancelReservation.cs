@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace RoomService.Subscriber
 {
-    public class TransferReservation
+    public class CancelReservation
     {
-        public Guid RoomId { get; set; }        
+        public Guid RoomId { get; set; }
     }
 }

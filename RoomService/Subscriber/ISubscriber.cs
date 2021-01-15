@@ -8,5 +8,6 @@ namespace RoomService.Subscriber
     public interface ISubscriber
     {
          void Subscribe();
+        void SubscribeCancel();
     }
 }
