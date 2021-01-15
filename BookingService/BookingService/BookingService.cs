@@ -80,7 +80,7 @@ namespace BookingService.BookingService
 
                 _reservation.DeleteOne(Builders<Reservation>.Filter.Eq("Id", id));
 
-                return "";
+                return "Reservation was canceled successfully";
             }
             catch (Exception ex)
             {
@@ -89,16 +89,16 @@ namespace BookingService.BookingService
 
         }
 
-        public ReservationDTO GetReservation()
+        public IEnumerable<ReservationDTO> GetReservation()
         {
             try
             {
                 var userId = _headerService.GetUserId();
 
                 var filter = Builders<Reservation>.Filter.Eq("UserId", userId);
-                var reservation = _reservation.Find(filter).FirstOrDefault();
+                var reservation = _reservation.Find(filter).ToList();
                 if (reservation == null) throw new Exception("Book doesn't existst");
-                var modelReservation = _mapper.Map<ReservationDTO>(reservation);
+                var modelReservation = _mapper.Map<IEnumerable<ReservationDTO>>(reservation);
 
                 return modelReservation;
             }
