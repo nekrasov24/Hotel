@@ -106,6 +106,26 @@ namespace BookingService.BookingService
             {
                 throw ex;
             }
-        }        
+        }
+
+        public async Task CheckReservation()
+        {
+            var allReservation = _reservation.Find(_ => true).ToList();
+
+            foreach (var finishDates in allReservation)
+            {
+                if (DateTime.Now > finishDates.FinishDateOfBooking)
+                {
+                    var newTransferReservation = new CancelReservation()
+                    {
+                        RoomId = finishDates.RoomId
+                    };
+                    await _publicher.CancelPublish(newTransferReservation);
+
+                    var id = finishDates.Id;
+                    _reservation.DeleteOne(Builders<Reservation>.Filter.Eq("Id", id));
+                }
+            }
+        }
     }
 }

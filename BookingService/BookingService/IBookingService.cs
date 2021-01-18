@@ -10,5 +10,6 @@ namespace BookingService.BookingService
         Task<string> CreateReservation(BookingRequestModel model);
         Task<string> CancelReservation(Guid id);
         IEnumerable<ReservationDTO> GetReservation();
+        Task CheckReservation();
     }
 }

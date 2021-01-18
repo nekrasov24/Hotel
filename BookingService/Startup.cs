@@ -7,6 +7,10 @@ using BookingService.HeaderService;
 using BookingService.MapperProfile;
 using BookingService.Model;
 using BookingService.Publisher;
+using BookingService.Quartz.Job;
+using BookingService.Quartz.JobFactory;
+using BookingService.Quartz.QuartzHostedService;
+using BookingService.Quartz.Scheduler;
 using EasyNetQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,6 +21,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
 
 namespace BookingService
 {
@@ -39,6 +46,65 @@ namespace BookingService
             services.AddScoped<IPublisher, Publisher.Publisher>();
             services.AddScoped<IHeaderService, HeaderService.HeaderService>();
             services.AddScoped<IBookingService, BookingService.BookingService>();
+            //services.AddSingleton<IJobFactory, JobFactory>();
+            //services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+            services.AddTransient<Job>();
+            //services.AddSingleton<JobRunner>();
+            //services.AddSingleton(new JobSchedule(
+            //    jobType: typeof(Job),
+            //    cronExpression: "0/10 0 0 ? * * *"));
+            //services.AddHostedService<QuartzHostedService>();
+
+
+
+            services.Configure<QuartzOptions>(Configuration.GetSection("Quartz"));
+
+
+            services.AddQuartz(q =>
+            {
+                q.UseMicrosoftDependencyInjectionScopedJobFactory();
+
+                var jobKey = new JobKey("awesome job", "awesome group");
+                //q.AddJob<Job>(j => j
+                //    .WithIdentity(jobKey)
+                //    .WithDescription("my awesome job")
+                //);
+
+                //q.AddTrigger(t => t
+                //    .WithIdentity("Simple Trigger")
+                //    .ForJob(jobKey)
+                //    .StartNow()
+                //    .WithCronSchedule("0/10 0 0 ? * * *")
+                //    .WithDescription("my awesome simple trigger")
+                //);
+
+                //IJobDetail job = JobBuilder.Create<Job>()
+                //    .WithIdentity("job1", "group1")
+                //    .Build();
+
+                //// Trigger the job to run now, and then repeat every 10 seconds
+                //ITrigger trigger = TriggerBuilder.Create()
+                //    .WithIdentity("trigger1", "group1")
+                //    .StartNow()
+                //    .WithSimpleSchedule(x => x
+                //        .WithIntervalInSeconds(10)
+                //        .RepeatForever())
+                //    .Build();
+
+                q.ScheduleJob<Job>(t => t
+                    .WithIdentity("Simple Trigger")
+                    .StartNow()
+                    .WithCronSchedule("* * * * * ?")
+                    .WithDescription("my awesome simple trigger")
+                );
+            });
+
+            // Quartz.Extensions.Hosting hosting
+            services.AddQuartzServer(options =>
+            {
+                // when shutting down we want jobs to complete gracefully
+                options.WaitForJobsToComplete = true;
+            });
 
             services.AddHttpContextAccessor();
             services.AddMapper();
