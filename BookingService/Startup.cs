@@ -11,6 +11,7 @@ using BookingService.Quartz.Job;
 using BookingService.Quartz.JobFactory;
 using BookingService.Quartz.QuartzHostedService;
 using BookingService.Quartz.Scheduler;
+using BookingService.Subscriber;
 using EasyNetQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -46,9 +47,14 @@ namespace BookingService
             services.AddScoped<IPublisher, Publisher.Publisher>();
             services.AddScoped<IHeaderService, HeaderService.HeaderService>();
             services.AddScoped<IBookingService, BookingService.BookingService>();
+            services.AddSingleton<ISubscriber, Subscriber.Subscriber>();
             //services.AddSingleton<IJobFactory, JobFactory>();
             //services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
-            services.AddTransient<Job>();
+
+
+            //services.AddTransient<Job>();
+
+
             //services.AddSingleton<JobRunner>();
             //services.AddSingleton(new JobSchedule(
             //    jobType: typeof(Job),
@@ -57,14 +63,16 @@ namespace BookingService
 
 
 
-            services.Configure<QuartzOptions>(Configuration.GetSection("Quartz"));
+            //services.Configure<QuartzOptions>(Configuration.GetSection("Quartz"));
 
 
-            services.AddQuartz(q =>
+            /*services.AddQuartz(q =>
             {
                 q.UseMicrosoftDependencyInjectionScopedJobFactory();
 
                 var jobKey = new JobKey("awesome job", "awesome group");
+
+
                 //q.AddJob<Job>(j => j
                 //    .WithIdentity(jobKey)
                 //    .WithDescription("my awesome job")
@@ -97,14 +105,14 @@ namespace BookingService
                     .WithCronSchedule("* * * * * ?")
                     .WithDescription("my awesome simple trigger")
                 );
-            });
+            });*/
 
             // Quartz.Extensions.Hosting hosting
-            services.AddQuartzServer(options =>
+            /*services.AddQuartzServer(options =>
             {
                 // when shutting down we want jobs to complete gracefully
                 options.WaitForJobsToComplete = true;
-            });
+            });*/
 
             services.AddHttpContextAccessor();
             services.AddMapper();
@@ -112,8 +120,10 @@ namespace BookingService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ISubscriber subscriber)
         {
+            subscriber.SubscribeJobMessage();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

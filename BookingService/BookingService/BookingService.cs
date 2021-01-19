@@ -2,6 +2,8 @@
 using BookingService.HeaderService;
 using BookingService.Model;
 using BookingService.Publisher;
+using BookingService.Subscriber;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -16,8 +18,10 @@ namespace BookingService.BookingService
         private readonly IHeaderService _headerService;
         private readonly IPublisher _publicher;
         private readonly IMapper _mapper;
+        private readonly ILogger<BookingService> _logger;
 
-        public BookingService(IReservationSettings settings, IHeaderService headerService, IPublisher publicher, IMapper mapper)
+        public BookingService(IReservationSettings settings, IHeaderService headerService, IPublisher publicher, IMapper mapper,
+            ILogger<BookingService> logger)
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
@@ -25,6 +29,7 @@ namespace BookingService.BookingService
             _headerService = headerService;
             _publicher = publicher;
             _mapper = mapper;
+            _logger = logger;
         }
         public async Task<string> CreateReservation(BookingRequestModel model)
         {
@@ -168,24 +173,50 @@ namespace BookingService.BookingService
             }
         }
 
-        public async Task CheckReservation()
+        public async Task CheckReservation(JobMessage message)
         {
-            var allReservation = _reservation.Find(_ => true).ToList();
+            _logger.LogInformation("start check");
+            var awaitMessage = "Let's check";
 
-            foreach (var finishDates in allReservation)
+            if (message.Message == awaitMessage)
             {
-                if (DateTime.UtcNow > finishDates.FinishDateOfBooking)
-                {
-                    var newTransferReservation = new CancelReservation()
-                    {
-                        RoomId = finishDates.RoomId
-                    };
-                    await _publicher.CancelPublish(newTransferReservation);
+                var allReservation = _reservation.Find(_ => true).ToList();
 
-                    var id = finishDates.Id;
-                    _reservation.DeleteOne(Builders<Reservation>.Filter.Eq("Id", id));
+                foreach (var finishDates in allReservation)
+                {
+                    if (DateTime.UtcNow > finishDates.FinishDateOfBooking)
+                    {
+                        var newTransferReservation = new CancelReservation()
+                        {
+                            RoomId = finishDates.RoomId
+                        };
+                        await _publicher.CancelPublish(newTransferReservation);
+
+                        var id = finishDates.Id;
+                        _reservation.DeleteOne(Builders<Reservation>.Filter.Eq("Id", id));
+                    }
                 }
             }
+
+            _logger.LogInformation("finish check");
+
+
+            //var allReservation = _reservation.Find(_ => true).ToList();
+
+            //foreach (var finishDates in allReservation)
+            //{
+            //    if (DateTime.UtcNow > finishDates.FinishDateOfBooking)
+            //    {
+            //        var newTransferReservation = new CancelReservation()
+            //        {
+            //            RoomId = finishDates.RoomId
+            //        };
+            //        await _publicher.CancelPublish(newTransferReservation);
+
+            //        var id = finishDates.Id;
+            //        _reservation.DeleteOne(Builders<Reservation>.Filter.Eq("Id", id));
+            //    }
+            //}
         }
     }
 }

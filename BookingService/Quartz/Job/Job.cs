@@ -30,7 +30,7 @@ namespace BookingService.Quartz.Job
         {
             _logger.LogInformation("__________TRA TRA TRA TRA_______________");
 
-            await _bookingService.CheckReservation();
+            //await _bookingService.CheckReservation();
 
         }
     }

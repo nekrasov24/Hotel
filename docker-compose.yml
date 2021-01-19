@@ -129,3 +129,19 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     volumes:
       - ~/.aspnet/https:/https:ro
+  sheduler-service:
+    image: sheduler-service:latest
+    container_name: sheduler-service
+    restart: always
+    ports:
+      - 85:80
+      - 4448:443
+    build:
+      context: ./Scheduler/.
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=1111
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+      - ~/.aspnet/https:/https:ro
