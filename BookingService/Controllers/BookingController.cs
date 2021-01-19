@@ -20,7 +20,7 @@ namespace BookingService.Controllers
         }
 
         [HttpPost("book")]
-        public async Task<IActionResult> CreateReservation(BookingRequestModel model)
+        public async Task<IActionResult> CreateReservation([FromBody]BookingRequestModel model)
         {
             try
             {

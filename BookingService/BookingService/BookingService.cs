@@ -30,13 +30,41 @@ namespace BookingService.BookingService
         {
             try
             {
-                var filter = Builders<Reservation>.Filter.Eq("RoomId", model.RoomId);
-                var reservation = _reservation.Find(filter).FirstOrDefault();
-                if (reservation != null) throw new Exception("Room can't be booked");
+                if(model.ReservFinishedDate <= model.ReservStartDate)
+                    throw new Exception("Start date can not be biggest than finish date");
 
+                var filter = Builders<Reservation>.Filter.Eq("RoomId", model.RoomId);
+
+                var listReservations = _reservation.Find(filter).ToList();
+                //if (reservation != null) throw new Exception("Room can't be booked");
+
+                foreach (var reservation in listReservations)
+                {
+                    if (model.ReservStartDate >= reservation.ReservStartDate &&
+                        model.ReservStartDate <= reservation.ReservFinishedDate ||
+                        model.ReservFinishedDate >= reservation.ReservStartDate &&
+                        model.ReservFinishedDate <= reservation.ReservFinishedDate)
+                    {                        
+                            throw new Exception("Room can't be booked");                
+                    }
+                    else
+                    {
+                        if (model.ReservStartDate <= reservation.ReservStartDate &&
+                            model.ReservFinishedDate >= reservation.ReservFinishedDate)
+                        {
+                            throw new Exception("Room can't be booked");
+                        }
+                    }
+                }   
+
+                            
+                             
+                
+                
                 var startDate = DateTime.UtcNow;
                 var finishDate = startDate.AddMinutes(2);
                 var userId = _headerService.GetUserId();
+
                 var newReservation = new Reservation()
                 {
                     Id = Guid.NewGuid(),
@@ -45,7 +73,8 @@ namespace BookingService.BookingService
                     StartDateOfBooking = startDate,
                     FinishDateOfBooking = finishDate,
                     ReservStartDate = model.ReservStartDate,
-                    ReservFinishedDate = model.ReservFinishedDate
+                    ReservFinishedDate = model.ReservFinishedDate,
+                    NumberOfNights = (model.ReservFinishedDate - model.ReservStartDate).Days
                 };
 
                 _reservation.InsertOne(newReservation);
@@ -53,8 +82,39 @@ namespace BookingService.BookingService
                 {
                     RoomId = newReservation.RoomId
                 };
+
                 await _publicher.Publish(newTransferReservation);
+
                 return "Reservation was added successfully";
+                
+                
+
+
+                //var startDate = DateTime.UtcNow;
+                //var finishDate = startDate.AddMinutes(2);
+                //var userId = _headerService.GetUserId();
+
+                //var newReservation = new Reservation()
+                //{
+                //    Id = Guid.NewGuid(),
+                //    RoomId = model.RoomId,
+                //    UserId = userId,
+                //    StartDateOfBooking = startDate,
+                //    FinishDateOfBooking = finishDate,
+                //    ReservStartDate = model.ReservStartDate,
+                //    ReservFinishedDate = model.ReservFinishedDate,
+                //    NumberOfNights = (model.ReservFinishedDate - model.ReservStartDate).Days
+                //};
+
+                //_reservation.InsertOne(newReservation);
+                //var newTransferReservation = new TransferReservation()
+                //{
+                //    RoomId = newReservation.RoomId
+                //};
+
+                //await _publicher.Publish(newTransferReservation);
+
+                //return "Reservation was added successfully";
             }
             catch (Exception ex)
             {
@@ -114,7 +174,7 @@ namespace BookingService.BookingService
 
             foreach (var finishDates in allReservation)
             {
-                if (DateTime.Now > finishDates.FinishDateOfBooking)
+                if (DateTime.UtcNow > finishDates.FinishDateOfBooking)
                 {
                     var newTransferReservation = new CancelReservation()
                     {

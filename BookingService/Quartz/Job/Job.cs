@@ -30,18 +30,8 @@ namespace BookingService.Quartz.Job
         {
             _logger.LogInformation("__________TRA TRA TRA TRA_______________");
 
-            //using var serviceScope = _pr.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            //var sheckReservation = serviceScope.ServiceProvider.GetService<IBookingService>();
-            //await sheckReservation.CheckReservation();
             await _bookingService.CheckReservation();
 
-            //using (var scope = serviceScopeFactory.CreateScope())
-            //{
-            //    var sheckReservation = scope.ServiceProvider.GetService<IBookingService>();
-
-            //    await sheckReservation.CheckReservation();
-
-            //};
         }
     }
 }
