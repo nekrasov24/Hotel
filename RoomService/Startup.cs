@@ -56,8 +56,10 @@ namespace RoomService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env, ISubscriber subscriber)
+        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env, ISubscriber subscriber, RoomContext roomContext)
         {
+            roomContext.Database.Migrate();
+
             subscriber.Subscribe();
             await subscriber.SubscribeVerificationRoomId();
             subscriber.SubscribeCancel();
