@@ -39,7 +39,7 @@ namespace BookingService.BookingService
                 VerificationRoomId verify = new VerificationRoomId() { RoomId = model.RoomId.ToString() };
 
                 var roomId = await _publicher.VerifyRoomId(verify);
-                var message = "Rammstein";
+                var message = "Ok";
                 _logger.LogInformation(message);
                 _logger.LogInformation(message);
                 _logger.LogInformation(message);
