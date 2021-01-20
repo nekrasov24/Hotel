@@ -41,6 +41,7 @@ namespace RoomService
             string connectionRabbitMQ = Configuration.GetConnectionString("Config");
 
             services.AddSingleton(RabbitHutch.CreateBus(connectionRabbitMQ).Advanced);
+            services.AddSingleton(RabbitHutch.CreateBus(connectionRabbitMQ));
             services.AddDbContext<RoomContext>(options => options.UseSqlServer(connectionstring));
             services.AddScoped<IRepository<Room, Guid>, Repository<Room, Guid>>();
             services.AddScoped<IRepository<RoomImage, Guid>, Repository<RoomImage, Guid>>();
@@ -55,9 +56,10 @@ namespace RoomService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ISubscriber subscriber)
+        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env, ISubscriber subscriber)
         {
             subscriber.Subscribe();
+            await subscriber.SubscribeVerificationRoomId();
             subscriber.SubscribeCancel();
 
             if (env.IsDevelopment())

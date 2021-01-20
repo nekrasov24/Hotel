@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BookingService.Subscriber
+namespace BookingService.BookingService
 {
-    public interface ISubscriber
+    public class Price
     {
-        void SubscribeJobMessage();
-
+        public string PriceForNight { get; set; }
     }
 }

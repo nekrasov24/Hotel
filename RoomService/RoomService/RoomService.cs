@@ -171,5 +171,24 @@ namespace RoomService.RoomService
             await _roomRepository.EditRoom(room);
         }
 
+        public string VerifyRoomId(string verification)
+        {
+            var verify = Guid.Parse(verification);
+            
+            var room = _roomRepository.GetRoomById(verify);
+            if (room != null)
+            {
+                var mes = "Ok";
+                return mes;
+
+
+            }
+            
+            var message = "Room was not found!!!!!";
+            return message;
+            
+
+        }
+
     }
 }

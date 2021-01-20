@@ -2,6 +2,7 @@
 using EasyNetQ.Topology;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using RoomService.Subscriber;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace RoomService.Publisher
 
         }
 
-
+        
 
 
     }

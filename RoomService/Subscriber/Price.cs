@@ -5,11 +5,8 @@ using System.Threading.Tasks;
 
 namespace RoomService.Subscriber
 {
-    public interface ISubscriber
+    public class Price
     {
-         void Subscribe();
-        void SubscribeCancel();
-
-        Task SubscribeVerificationRoomId();
+        public string PriceForNight { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace Scheduler.Quartz.CancelReservationJob
             _pr = pr;
             _publisher = publisher;
         }
-
+        
         public async Task Execute(IJobExecutionContext context)
         {
             _logger.LogInformation("__________Let's check_______________");

@@ -16,6 +16,7 @@ namespace RoomService.RoomService
         Task<RoomDTO> GetRoom(Guid id);
         Task ChangeStatus(TransferReservation reservation);
         Task ChangeStatusToFree(CancelReservation reservation);
+        string VerifyRoomId(string verification);
 
     }
 }

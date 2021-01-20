@@ -35,6 +35,7 @@ namespace BookingService.Subscriber
             });
         }
 
+
         private JobMessage DeserializeJobMessage(string bodyMessage)
         {
             var message = JsonConvert.DeserializeObject<JobMessage>(bodyMessage);

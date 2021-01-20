@@ -5,11 +5,8 @@ using System.Threading.Tasks;
 
 namespace RoomService.Subscriber
 {
-    public interface ISubscriber
+    public class VerificationRoomId
     {
-         void Subscribe();
-        void SubscribeCancel();
-
-        Task SubscribeVerificationRoomId();
+        public string RoomId { get; set; }
     }
 }

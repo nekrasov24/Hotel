@@ -35,64 +35,72 @@ namespace BookingService.BookingService
         {
             try
             {
-                if(model.ReservFinishedDate <= model.ReservStartDate)
-                    throw new Exception("Start date can not be biggest than finish date");
 
-                var filter = Builders<Reservation>.Filter.Eq("RoomId", model.RoomId);
+                VerificationRoomId verify = new VerificationRoomId() { RoomId = model.RoomId.ToString() };
 
-                var listReservations = _reservation.Find(filter).ToList();
-                //if (reservation != null) throw new Exception("Room can't be booked");
+                var roomId = await _publicher.VerifyRoomId(verify);
+                var message = "Ok";
 
-                foreach (var reservation in listReservations)
+                if (roomId == message)
                 {
-                    if (model.ReservStartDate >= reservation.ReservStartDate &&
-                        model.ReservStartDate <= reservation.ReservFinishedDate ||
-                        model.ReservFinishedDate >= reservation.ReservStartDate &&
-                        model.ReservFinishedDate <= reservation.ReservFinishedDate)
-                    {                        
-                            throw new Exception("Room can't be booked");                
-                    }
-                    else
+                    if (model.ReservFinishedDate <= model.ReservStartDate)
+                        throw new Exception("Start date can not be biggest than finish date");
+
+                    var filter = Builders<Reservation>.Filter.Eq("RoomId", model.RoomId);
+
+                    var listReservations = _reservation.Find(filter).ToList();
+                    //if (reservation != null) throw new Exception("Room can't be booked");
+
+                    foreach (var reservation in listReservations)
                     {
-                        if (model.ReservStartDate <= reservation.ReservStartDate &&
-                            model.ReservFinishedDate >= reservation.ReservFinishedDate)
+                        if (model.ReservStartDate >= reservation.ReservStartDate &&
+                            model.ReservStartDate <= reservation.ReservFinishedDate ||
+                            model.ReservFinishedDate >= reservation.ReservStartDate &&
+                            model.ReservFinishedDate <= reservation.ReservFinishedDate)
                         {
                             throw new Exception("Room can't be booked");
                         }
+                        else
+                        {
+                            if (model.ReservStartDate <= reservation.ReservStartDate &&
+                                model.ReservFinishedDate >= reservation.ReservFinishedDate)
+                            {
+                                throw new Exception("Room can't be booked");
+                            }
+                        }
                     }
-                }   
 
-                            
-                             
-                
-                
-                var startDate = DateTime.UtcNow;
-                var finishDate = startDate.AddMinutes(2);
-                var userId = _headerService.GetUserId();
+                    var startDate = DateTime.UtcNow;
+                    var finishDate = startDate.AddMinutes(2);
+                    var userId = _headerService.GetUserId();
 
-                var newReservation = new Reservation()
-                {
-                    Id = Guid.NewGuid(),
-                    RoomId = model.RoomId,
-                    UserId = userId,
-                    StartDateOfBooking = startDate,
-                    FinishDateOfBooking = finishDate,
-                    ReservStartDate = model.ReservStartDate,
-                    ReservFinishedDate = model.ReservFinishedDate,
-                    NumberOfNights = (model.ReservFinishedDate - model.ReservStartDate).Days
-                };
+                    var newReservation = new Reservation()
+                    {
+                        Id = Guid.NewGuid(),
+                        RoomId = model.RoomId,
+                        UserId = userId,
+                        StartDateOfBooking = startDate,
+                        FinishDateOfBooking = finishDate,
+                        ReservStartDate = model.ReservStartDate,
+                        ReservFinishedDate = model.ReservFinishedDate,
+                        NumberOfNights = (model.ReservFinishedDate - model.ReservStartDate).Days
+                    };
 
-                _reservation.InsertOne(newReservation);
-                var newTransferReservation = new TransferReservation()
-                {
-                    RoomId = newReservation.RoomId
-                };
+                    _reservation.InsertOne(newReservation);
+                    var newTransferReservation = new TransferReservation()
+                    {
+                        RoomId = newReservation.RoomId
+                    };
 
-                await _publicher.Publish(newTransferReservation);
+                    await _publicher.Publish(newTransferReservation);
 
-                return "Reservation was added successfully";
-                
-                
+                    return "Reservation was added successfully";
+                }
+                throw new Exception(message);
+
+
+
+
 
 
                 //var startDate = DateTime.UtcNow;
@@ -218,5 +226,7 @@ namespace BookingService.BookingService
             //    }
             //}
         }
+
+        
     }
 }

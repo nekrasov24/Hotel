@@ -42,6 +42,7 @@ namespace BookingService
         {
             string connectionRabbitMQ = Configuration.GetConnectionString("Config");
             services.AddSingleton(RabbitHutch.CreateBus(connectionRabbitMQ).Advanced);
+            services.AddSingleton(RabbitHutch.CreateBus(connectionRabbitMQ));
             services.Configure<ReservationSettings>(Configuration.GetSection(nameof(ReservationSettings)));
             services.AddSingleton<IReservationSettings>(sp => sp.GetRequiredService<IOptions<ReservationSettings>>().Value);
             services.AddScoped<IPublisher, Publisher.Publisher>();
