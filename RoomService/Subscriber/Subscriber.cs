@@ -42,6 +42,12 @@ namespace RoomService.Subscriber
                c => c.WithQueueName(nameof(VerificationRoomId)));
         }
 
+        /*public async Task SubscribeGetPriceForNight()
+        {
+            await _rpcBus.Rpc.RespondAsync<string, string>(async (responseString, token) => await DeserializeGetPrice(responseString),
+                c => c.WithQueueName(nameof(Price)));
+        }*/
+
 
         public void SubscribeCancel()
         {
@@ -80,5 +86,18 @@ namespace RoomService.Subscriber
 
             return mes.ToString();
         }
+
+        /*private async Task<string> DeserializeGetPrice(string bodyMessage)
+        {
+            var message = JsonConvert.DeserializeObject<Price>(bodyMessage);
+            var mess = message.PriceForNight;
+            using var serviceScope = _pr.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            var roomService = serviceScope.ServiceProvider.GetService<IRoomService>();
+            var mes = roomService.GetPrice(mess);
+
+            _logger.LogWarning($"logger readed {message}");
+
+            return mes.ToString();
+        }*/
     }
 }

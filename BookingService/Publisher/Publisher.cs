@@ -50,18 +50,24 @@ namespace BookingService.Publisher
 
         public async Task<string> VerifyRoomId(VerificationRoomId verificationtion)
         {
-
-
-
             var response = await _rpcBus.Rpc.RequestAsync<string, string>(JsonConvert.SerializeObject(verificationtion), 
                 c => c.WithQueueName(nameof(VerificationRoomId)));
 
             _logger.LogWarning($"logger readed {response}");
 
             return response;
- 
-
 
         }
+
+        /*public async Task<string> GetPriceForNight(Price mes)
+        {
+            var response = await _rpcBus.Rpc.RequestAsync<string, string>(JsonConvert.SerializeObject(mes),
+                c => c.WithQueueName(nameof(Price)));
+
+            _logger.LogWarning($"logger readed {response}");
+
+            return response;
+
+        }*/
     }
 }

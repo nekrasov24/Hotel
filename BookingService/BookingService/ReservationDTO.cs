@@ -14,5 +14,7 @@ namespace BookingService.BookingService
         public DateTime FinishDateOfBooking { get; set; }
         public DateTime ReservStartDate { get; set; }
         public DateTime ReservFinishedDate { get; set; }
+        public int NumberOfNights { get; set; }
+        public Decimal AmountPaid { get; set; }
     }
 }

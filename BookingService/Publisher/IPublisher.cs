@@ -12,5 +12,6 @@ namespace BookingService.Publisher
         Task Publish(TransferReservation reservation);
         Task CancelPublish(CancelReservation reservation);
         Task<string> VerifyRoomId(VerificationRoomId verificationtion);
+        //Task<string> GetPriceForNight(Price mes);
     }
 }

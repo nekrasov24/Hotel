@@ -178,17 +178,15 @@ namespace RoomService.RoomService
             var room = _roomRepository.GetRoomById(verify);
             if (room != null)
             {
-                var mes = "Ok";
+                var mes = room.PriceForNight.ToString();
                 return mes;
-
-
             }
             
             var message = "Room was not found!!!!!";
-            return message;
-            
-
+            return message;           
         }
+
+        
 
     }
 }

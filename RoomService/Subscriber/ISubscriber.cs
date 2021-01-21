@@ -11,5 +11,6 @@ namespace RoomService.Subscriber
         void SubscribeCancel();
 
         Task SubscribeVerificationRoomId();
+        //Task SubscribeGetPriceForNight();
     }
 }

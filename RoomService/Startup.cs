@@ -63,6 +63,7 @@ namespace RoomService
             subscriber.Subscribe();
             await subscriber.SubscribeVerificationRoomId();
             subscriber.SubscribeCancel();
+            //await subscriber.SubscribeGetPriceForNight();
 
             if (env.IsDevelopment())
             {
