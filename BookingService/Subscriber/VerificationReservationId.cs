@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace BookingService.Subscriber
 {
-    public interface ISubscriber
+    public class VerificationReservationId
     {
-        void SubscribeJobMessage();
-        Task SubscribeVerificationReservationId();
-
+        public string ReservationId { get; set; }
+        public string UserId { get; set; }
     }
 }

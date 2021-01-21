@@ -5,6 +5,7 @@ using BookingService.Publisher;
 using BookingService.Subscriber;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -235,26 +236,38 @@ namespace BookingService.BookingService
             }
 
             _logger.LogInformation("finish check");
-
-
-            //var allReservation = _reservation.Find(_ => true).ToList();
-
-            //foreach (var finishDates in allReservation)
-            //{
-            //    if (DateTime.UtcNow > finishDates.FinishDateOfBooking)
-            //    {
-            //        var newTransferReservation = new CancelReservation()
-            //        {
-            //            RoomId = finishDates.RoomId
-            //        };
-            //        await _publicher.CancelPublish(newTransferReservation);
-
-            //        var id = finishDates.Id;
-            //        _reservation.DeleteOne(Builders<Reservation>.Filter.Eq("Id", id));
-            //    }
-            //}
         }
-
         
+        public string VerifyReservationId(VerificationReservationId verification)
+        {
+            var verifyReservationId = verification.ReservationId;
+            var verifyUserId = Guid.Parse(verification.UserId);
+            var verify = Guid.Parse(verifyReservationId);
+
+            
+
+            var filter = Builders<Reservation>.Filter.Eq("Id", verify);
+            var reservation = _reservation.Find(filter).FirstOrDefault();
+            if (reservation == null) return("Book doesn't existst");
+
+            if(verifyUserId == reservation.UserId)
+            {
+                var senderReservation = new SenderReservation()
+                {
+                    RoomId = reservation.RoomId,
+                    ReservStartDate = reservation.ReservStartDate,
+                    ReservFinishedDate = reservation.ReservFinishedDate,
+                    NumberOfNights = reservation.NumberOfNights,
+                    AmountPaid = reservation.AmountPaid
+                };
+
+                var send = JsonConvert.SerializeObject(senderReservation);
+
+                return send;
+            }
+
+
+            return "";
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Authorization.Dal;
+using Authorization.Subscriber;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,6 @@ namespace Authorization.UserService
         Task<string> Authenticate(AuthenticateRequest model);
         ProfileModel GetUser(Guid id);
         Task<string> EditUserAsync(EditUserRequestModel model);
+        Task<string> PayRoom(PaymentModel model);
     }
 }

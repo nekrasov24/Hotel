@@ -12,5 +12,6 @@ namespace BookingService.BookingService
         Task<string> CancelReservation(Guid id);
         IEnumerable<ReservationDTO> GetReservation();
         Task CheckReservation(JobMessage message);
+        string VerifyReservationId(VerificationReservationId verification);
     }
 }

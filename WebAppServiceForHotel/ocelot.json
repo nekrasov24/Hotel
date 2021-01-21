@@ -332,6 +332,27 @@
       "AddHeadersToRequest": {
         "claims_UserId": "Claims[jti] > value > |"
       }
+    },
+    {
+      "DownstreamPathTemplate": "/api/order/pay",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "order-service",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/api/order/pay",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "Admin", "User" ]
+      },
+      "ReRoutesCaseSensitive": false,
+      "DangerousAcceptAnyServerCertificateValidator": true,
+      "AddHeadersToRequest": {
+        "claims_UserId": "Claims[jti] > value > |"
+      }
     }
 
   ]

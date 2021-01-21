@@ -2,6 +2,7 @@
 using Authorization.Dal;
 using Authorization.HeaderService;
 using Authorization.Publisher;
+using Authorization.Subscriber;
 using Authorization.UserRepository;
 using AutoMapper;
 using Elskom.Generic.Libs;
@@ -40,7 +41,10 @@ namespace Authorization.UserService
                 
                 var user = (await _userRepository.GetAllAsync(u => u.Email.ToUpper().Equals(model.Email.ToUpper()))).FirstOrDefault();
                 if (user != null) throw new Exception("User already exists");
-                
+
+                var accountBalance = 0.00m;
+
+
                 var newUser = new User
                 {
                     Id = Guid.NewGuid(),
@@ -49,7 +53,8 @@ namespace Authorization.UserService
                     Roles = Roles.User,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    DateOfBirth = model.DateOfBirth
+                    DateOfBirth = model.DateOfBirth,
+                    AccountBalance = accountBalance
                 };
 
                 await _userRepository.AddUserAsync(newUser);
@@ -174,7 +179,27 @@ namespace Authorization.UserService
             {
                 throw ex;
             }
+        }
 
+        public async Task<string> PayRoom(PaymentModel model)
+        {
+            var userId = Guid.Parse(model.UserId);
+            var amountPaid = Convert.ToDecimal(model.AmountPaid);
+
+            var findUser = _userRepository.GetUserById(userId);
+            var accountBalance = findUser.AccountBalance;
+
+            if (amountPaid > accountBalance)
+            {
+                var mes = "I'm sorry, but it appears your account has insufficient funds";
+                return mes;
+            }
+
+            accountBalance -= amountPaid;
+            findUser.AccountBalance = accountBalance;
+            await _userRepository.EditUser(findUser);
+
+            return "Payment was successfully";
         }
     }
 }

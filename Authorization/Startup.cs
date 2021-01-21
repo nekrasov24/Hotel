@@ -7,6 +7,7 @@ using Authorization.Dal;
 using Authorization.HeaderService;
 using Authorization.MapperProfile;
 using Authorization.Publisher;
+using Authorization.Subscriber;
 using Authorization.UserRepository;
 using Authorization.UserService;
 using EasyNetQ;
@@ -41,10 +42,12 @@ namespace Authorization
             services.AddDbContext<UserContext>(options => options.UseSqlServer(connection));
             string connectionRabbitMQ = Configuration.GetConnectionString("Config");
             services.AddSingleton(RabbitHutch.CreateBus(connectionRabbitMQ).Advanced);
+            services.AddSingleton(RabbitHutch.CreateBus(connectionRabbitMQ));
             services.AddScoped<IHeaderService, HeaderService.HeaderService>();
             services.AddScoped<IUserService, UserService.UserService>();
             services.AddScoped<IRepository<User, Guid>, Repository<User, Guid>>();
             services.AddScoped<IPublisher, Publisher.Publisher>();
+            services.AddSingleton<ISubscriber, Subscriber.Subscriber>();
             services.AddMapper();
             services.AddCors(options =>
             {
@@ -60,8 +63,9 @@ namespace Authorization
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserContext userContext/*, IUserService service*/)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserContext userContext, ISubscriber subscriber/*, IUserService service*/)
         {
+            subscriber.SubscribePayRoom();
             userContext.Database.Migrate();
 
             //if (userContext.Users.All(x => x.Roles != Roles.Admin))

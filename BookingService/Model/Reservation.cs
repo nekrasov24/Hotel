@@ -31,8 +31,10 @@ namespace BookingService.Model
         [BsonElement("ReservFinishedDate")]
         [BsonRepresentation(BsonType.String)]
         public DateTime ReservFinishedDate { get; set; }
+        [BsonElement("NumberOfNights")]
         [BsonRepresentation(BsonType.String)]
         public int NumberOfNights { get; set; }
+        [BsonElement("AmountPaid")]
         [BsonRepresentation(BsonType.String)]
         public Decimal AmountPaid { get; set; }
     }
