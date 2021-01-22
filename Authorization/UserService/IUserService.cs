@@ -15,5 +15,6 @@ namespace Authorization.UserService
         ProfileModel GetUser(Guid id);
         Task<string> EditUserAsync(EditUserRequestModel model);
         Task<string> PayRoom(PaymentModel model);
+        Task<string> TopUp(BalanceModel summ);
     }
 }

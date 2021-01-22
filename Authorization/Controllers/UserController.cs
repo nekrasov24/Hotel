@@ -94,5 +94,19 @@ namespace Authorization.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("topup")]
+        public async Task<IActionResult> TopUp(BalanceModel summ)
+        {
+            try
+            {
+                var response = await _userService.TopUp(summ);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

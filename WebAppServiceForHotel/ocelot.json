@@ -353,6 +353,48 @@
       "AddHeadersToRequest": {
         "claims_UserId": "Claims[jti] > value > |"
       }
+    },
+    {
+      "DownstreamPathTemplate": "/api/user/topup",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authorization-service",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/api/topup",
+      "UpstreamHttpMethod": [ "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "Admin", "User" ]
+      },
+      "ReRoutesCaseSensitive": false,
+      "DangerousAcceptAnyServerCertificateValidator": true,
+      "AddHeadersToRequest": {
+        "claims_UserId": "Claims[jti] > value > |"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/order/getallorders",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "order-service",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/api/order/getallorders",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "Admin", "User" ]
+      },
+      "ReRoutesCaseSensitive": false,
+      "DangerousAcceptAnyServerCertificateValidator": true,
+      "AddHeadersToRequest": {
+        "claims_UserId": "Claims[jti] > value > |"
+      }
     }
 
   ]

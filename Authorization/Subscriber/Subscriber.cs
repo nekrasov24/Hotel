@@ -34,14 +34,26 @@ namespace Authorization.Subscriber
 
         private async Task<string> DeserializeVerify(string bodyMessage)
         {
-            var message = JsonConvert.DeserializeObject<PaymentModel>(bodyMessage);
-            using var serviceScope = _pr.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            var userService = serviceScope.ServiceProvider.GetService<IUserService>();
-            var mes = await userService.PayRoom(message);
+            try
+            {
+                _logger.LogInformation("DeserializeVerify {0}", bodyMessage);
 
-            _logger.LogWarning($"logger readed {message}");
+                var message = JsonConvert.DeserializeObject<PaymentModel>(bodyMessage);
 
-            return mes.ToString();
+
+                using var serviceScope = _pr.GetRequiredService<IServiceScopeFactory>().CreateScope();
+                var userService = serviceScope.ServiceProvider.GetService<IUserService>();
+                var mes = await userService.PayRoom(message);
+
+                _logger.LogWarning($"logger readed {message}");
+
+                return mes;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "fail Subscribe");
+                throw;
+            }
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Authorization.HeaderService
 
         private void SetHeaders()
         {
-            _requestHeaders = _ctxAccessor?.HttpContext.Request.Headers.ToArray() ?? Array.Empty<KeyValuePair<string, StringValues>>();
+            _requestHeaders = _ctxAccessor?.HttpContext?.Request?.Headers?.ToArray() ?? Array.Empty<KeyValuePair<string, StringValues>>();
         }
 
         public Guid GetUserId()

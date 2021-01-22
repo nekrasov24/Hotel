@@ -24,10 +24,10 @@ namespace OrderService.Publisher
 
         public async Task<string> VerifyReservationId(VerificationReservationId verificationtion)
         {
+
             var response = await _rpcBus.Rpc.RequestAsync<string, string>(JsonConvert.SerializeObject(verificationtion),
                 c => c.WithQueueName(nameof(VerificationReservationId)));
 
-            _logger.LogWarning($"logger readed {response}");
 
             return response;
 
@@ -35,10 +35,12 @@ namespace OrderService.Publisher
 
         public async Task<string> PayRoom(PaymentModel payment)
         {
+
+           
             var response = await _rpcBus.Rpc.RequestAsync<string, string>(JsonConvert.SerializeObject(payment),
                 c => c.WithQueueName(nameof(PaymentModel)));
 
-            _logger.LogWarning($"logger readed {response}");
+
 
             return response;
 

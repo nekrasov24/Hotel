@@ -7,7 +7,9 @@ using Authorization.UserRepository;
 using AutoMapper;
 using Elskom.Generic.Libs;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -25,14 +27,17 @@ namespace Authorization.UserService
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private readonly IPublisher _publisher;
+        private readonly ILogger<UserService> _logger;
+        private const decimal accountBalance = 0.00m;
         public UserService(IRepository<User, Guid> repository, IConfiguration configuration, IMapper mapper, IHeaderService headerService,
-            IPublisher publisher)
+            IPublisher publisher, ILogger<UserService> logger)
         {
             _userRepository = repository;
             _configuration = configuration;
             _headerService = headerService;
             _mapper = mapper;
             _publisher = publisher;
+            _logger = logger;
         }
         public async Task<string> Register(RegisterRequest model)
         {
@@ -42,7 +47,6 @@ namespace Authorization.UserService
                 var user = (await _userRepository.GetAllAsync(u => u.Email.ToUpper().Equals(model.Email.ToUpper()))).FirstOrDefault();
                 if (user != null) throw new Exception("User already exists");
 
-                var accountBalance = 0.00m;
 
 
                 var newUser = new User
@@ -82,7 +86,8 @@ namespace Authorization.UserService
                     Roles = Roles.Admin,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    DateOfBirth = model.DateOfBirth
+                    DateOfBirth = model.DateOfBirth,
+                    AccountBalance = accountBalance
                 };
                 _userRepository.AddUserAsync(newUser);
                 var token = GenerateJwtToken(newUser);
@@ -155,7 +160,8 @@ namespace Authorization.UserService
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 DateOfBirth = user.DateOfBirth.GetValueOrDefault().ToString("yyyy-MM-dd"),
-                Email = user.Email
+                Email = user.Email,
+                AccountBalance = user.AccountBalance
 
             };
             return  profileModel;
@@ -183,23 +189,70 @@ namespace Authorization.UserService
 
         public async Task<string> PayRoom(PaymentModel model)
         {
-            var userId = Guid.Parse(model.UserId);
-            var amountPaid = Convert.ToDecimal(model.AmountPaid);
-
-            var findUser = _userRepository.GetUserById(userId);
-            var accountBalance = findUser.AccountBalance;
-
-            if (amountPaid > accountBalance)
+            try
             {
-                var mes = "I'm sorry, but it appears your account has insufficient funds";
+                var userId = Guid.Parse(model.UserId);
+
+
+                var amountPaid = Convert.ToDecimal(model.AmountPaid);
+
+                var findUser = _userRepository.GetUserById(userId);
+
+                if (findUser == null)
+                {
+                    var mmm = "rtrtrtrtrtrtr";
+                    return mmm;
+                }
+
+                var accountBalance = findUser.AccountBalance;
+
+                if (amountPaid > accountBalance)
+                {
+                    var errMes = "I'm sorry, but it appears your account has insufficient funds";
+
+                    return errMes;
+                }
+
+                accountBalance -= amountPaid;
+                findUser.AccountBalance = accountBalance;
+                await _userRepository.EditUser(findUser);
+
+                var mes = "Payment has been successfully";
                 return mes;
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "fail UserService");
+                throw;
+            }
 
-            accountBalance -= amountPaid;
-            findUser.AccountBalance = accountBalance;
-            await _userRepository.EditUser(findUser);
+        }
 
-            return "Payment was successfully";
+        public async Task<string> TopUp(BalanceModel summ)
+        {
+            try
+            {
+                var userId = _headerService.GetUserId();
+
+                var findUser = _userRepository.GetUserById(userId);
+                var userBalance = findUser.AccountBalance;
+                var topUpBalance = summ.Balance;
+
+                if (topUpBalance > 0)
+                {
+                    userBalance += topUpBalance;
+                    findUser.AccountBalance = userBalance;
+                    await _userRepository.EditUser(findUser);
+                    return "Your balance has been credited successfully";
+                }
+                throw new Exception("Top Up amount can't negative");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
+
         }
     }
 }

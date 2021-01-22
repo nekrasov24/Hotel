@@ -11,5 +11,6 @@ namespace Authorization.UserService
         public string LastName { get; set; }
         public string DateOfBirth { get; set; }
         public string Email { get; set; }
+        public decimal AccountBalance { get; set; }
     }
 }

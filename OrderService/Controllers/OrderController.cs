@@ -20,19 +20,24 @@ namespace OrderService.Controllers
         }
 
         [HttpPost("pay")]
-        public IActionResult PayRoom(OrderRequestModel model)
+        public async Task<IActionResult> PayRoom([FromBody]OrderRequestModel model)
         {
             try
             {
-                var response = _orderService.PayRoom(model);
+                var response = await _orderService.PayRoom(model);
                 return Ok(response);
             }
             catch(Exception ex)
             {
                 return BadRequest(ex.Message);
-            }
-            
+            }            
+        }
 
+        [HttpGet("getallorders")]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            var response = await _orderService.GetAllOrders();
+            return Ok(response);            
         }
     }
 }

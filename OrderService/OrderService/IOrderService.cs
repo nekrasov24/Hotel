@@ -9,5 +9,6 @@ namespace OrderService.OrderService
     public interface IOrderService
     {
         Task<string> PayRoom(OrderRequestModel model);
+        Task<IEnumerable<OrderDTO>> GetAllOrders();
     }
 }

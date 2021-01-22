@@ -13,8 +13,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OrderService.HeaderService;
+using OrderService.MapperProfile;
 using OrderService.Model;
+using OrderService.OrderRepository;
 using OrderService.OrderService;
+using OrderService.Publisher;
 
 namespace OrderService
 {
@@ -38,7 +41,9 @@ namespace OrderService
             services.AddDbContext<OrderContext>(options => options.UseSqlServer(connectionstring));
             services.AddScoped<IOrderService, OrderService.OrderService>();
             services.AddScoped<IHeaderService, HeaderService.HeaderService>();
-
+            services.AddScoped<IOrderRepository<Order, Guid>, OrderRepository<Order, Guid>>();
+            services.AddScoped<IPublisher, Publisher.Publisher>();
+            services.AddMapper();
 
             services.AddHttpContextAccessor();
             services.AddControllers();

@@ -212,7 +212,7 @@ namespace BookingService.BookingService
 
         public async Task CheckReservation(JobMessage message)
         {
-            _logger.LogInformation("start check");
+            //_logger.LogInformation("start check");
             var awaitMessage = "Let's check";
 
             if (message.Message == awaitMessage)
@@ -235,20 +235,26 @@ namespace BookingService.BookingService
                 }
             }
 
-            _logger.LogInformation("finish check");
+            //_logger.LogInformation("finish check");
         }
         
-        public string VerifyReservationId(VerificationReservationId verification)
+        public async Task<string> VerifyReservationId(VerificationReservationId verification)
         {
             var verifyReservationId = verification.ReservationId;
             var verifyUserId = Guid.Parse(verification.UserId);
             var verify = Guid.Parse(verifyReservationId);
 
             
-
+            
             var filter = Builders<Reservation>.Filter.Eq("Id", verify);
             var reservation = _reservation.Find(filter).FirstOrDefault();
-            if (reservation == null) return("Book doesn't existst");
+            if (reservation == null)
+            {
+                var errBook = "Book doesn't existst";
+                var serializeBook = JsonConvert.SerializeObject(errBook);
+                return serializeBook;
+            }
+
 
             if(verifyUserId == reservation.UserId)
             {
@@ -266,8 +272,10 @@ namespace BookingService.BookingService
                 return send;
             }
 
+            var errorSend = "User doesn't existst";
+            var err = JsonConvert.SerializeObject(errorSend);
 
-            return "";
+            return err;
         }
     }
 }

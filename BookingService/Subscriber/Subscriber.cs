@@ -60,9 +60,10 @@ namespace BookingService.Subscriber
             var message = JsonConvert.DeserializeObject<VerificationReservationId>(bodyMessage);
             using var serviceScope = _pr.GetRequiredService<IServiceScopeFactory>().CreateScope();
             var bookingService = serviceScope.ServiceProvider.GetService<IBookingService>();
-            var mes = bookingService.VerifyReservationId(message);
+            var mes = await bookingService.VerifyReservationId(message);
 
             _logger.LogWarning($"logger readed {message}");
+
 
             return mes.ToString();
         }
