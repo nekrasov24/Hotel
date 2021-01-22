@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RoomService.Subscriber
+namespace OrderService.Model
 {
-    public interface ISubscriber
+    public class Payment
     {
-
-
-        Task SubscribeVerificationRoomId();
+        public string ReservationId { get; set; }
     }
 }

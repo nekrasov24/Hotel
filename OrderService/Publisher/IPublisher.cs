@@ -10,5 +10,6 @@ namespace OrderService.Publisher
     {
         Task<string> VerifyReservationId(VerificationReservationId verificationtion);
         Task<string> PayRoom(PaymentModel payment);
+        Task PublishPayment(Payment message);
     }
 }

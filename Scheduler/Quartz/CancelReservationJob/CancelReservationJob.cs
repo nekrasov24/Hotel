@@ -29,7 +29,7 @@ namespace Scheduler.Quartz.CancelReservationJob
         
         public async Task Execute(IJobExecutionContext context)
         {
-            //_logger.LogInformation("__________Let's check_______________");
+            _logger.LogInformation("__________Let's check_______________");
 
             var mesage = new JobMessage() { Message = "Let's check"};
 

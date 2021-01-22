@@ -127,6 +127,7 @@ namespace BookingService
 
             subscriber.SubscribeJobMessage();
             await subscriber.SubscribeVerificationReservationId();
+            subscriber.SubscribePayment();
 
             if (env.IsDevelopment())
             {

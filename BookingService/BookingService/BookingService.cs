@@ -75,26 +75,6 @@ namespace BookingService.BookingService
                     }
                 }
 
-                _logger.LogInformation(price);
-                _logger.LogInformation(price);
-                _logger.LogInformation(price);
-                _logger.LogInformation(price);
-                _logger.LogInformation(price);
-                _logger.LogInformation(price);
-                _logger.LogInformation(price);
-                _logger.LogInformation(price);
-                _logger.LogInformation(price);
-                _logger.LogInformation(price);
-                _logger.LogInformation(price);
-                _logger.LogInformation(price);
-                _logger.LogInformation(price);
-                _logger.LogInformation(price);
-
-
-
-
-
-
 
                 var startDate = DateTime.UtcNow;
                 var finishDate = startDate.AddMinutes(2);
@@ -113,7 +93,8 @@ namespace BookingService.BookingService
                     ReservStartDate = model.ReservStartDate,
                     ReservFinishedDate = model.ReservFinishedDate,
                     NumberOfNights = numberOfNights,
-                    AmountPaid = amountPaid
+                    AmountPaid = amountPaid,
+                    Status = Status.Booked
                 };
 
 
@@ -123,40 +104,8 @@ namespace BookingService.BookingService
                     RoomId = newReservation.RoomId
                 };
 
-                await _publicher.Publish(newTransferReservation);
-
                 return "Reservation was added successfully";
 
-
-
-
-
-
-                //var startDate = DateTime.UtcNow;
-                //var finishDate = startDate.AddMinutes(2);
-                //var userId = _headerService.GetUserId();
-
-                //var newReservation = new Reservation()
-                //{
-                //    Id = Guid.NewGuid(),
-                //    RoomId = model.RoomId,
-                //    UserId = userId,
-                //    StartDateOfBooking = startDate,
-                //    FinishDateOfBooking = finishDate,
-                //    ReservStartDate = model.ReservStartDate,
-                //    ReservFinishedDate = model.ReservFinishedDate,
-                //    NumberOfNights = (model.ReservFinishedDate - model.ReservStartDate).Days
-                //};
-
-                //_reservation.InsertOne(newReservation);
-                //var newTransferReservation = new TransferReservation()
-                //{
-                //    RoomId = newReservation.RoomId
-                //};
-
-                //await _publicher.Publish(newTransferReservation);
-
-                //return "Reservation was added successfully";
             }
             catch (Exception ex)
             {
@@ -177,9 +126,6 @@ namespace BookingService.BookingService
                     RoomId = reservation.RoomId
                 };
 
-                await _publicher.CancelPublish(newTransferReservation);
-
-
                 _reservation.DeleteOne(Builders<Reservation>.Filter.Eq("Id", id));
 
                 return "Reservation was canceled successfully";
@@ -199,7 +145,8 @@ namespace BookingService.BookingService
 
                 var filter = Builders<Reservation>.Filter.Eq("UserId", userId);
                 var reservation = _reservation.Find(filter).ToList();
-                if (reservation == null) throw new Exception("Book doesn't existst");
+
+
                 var modelReservation = _mapper.Map<IEnumerable<ReservationDTO>>(reservation);
 
                 return modelReservation;
@@ -212,7 +159,7 @@ namespace BookingService.BookingService
 
         public async Task CheckReservation(JobMessage message)
         {
-            //_logger.LogInformation("start check");
+            _logger.LogInformation("start check");
             var awaitMessage = "Let's check";
 
             if (message.Message == awaitMessage)
@@ -223,19 +170,12 @@ namespace BookingService.BookingService
                 {
                     if (DateTime.UtcNow > finishDates.FinishDateOfBooking)
                     {
-                        var newTransferReservation = new CancelReservation()
-                        {
-                            RoomId = finishDates.RoomId
-                        };
-                        await _publicher.CancelPublish(newTransferReservation);
-
                         var id = finishDates.Id;
                         _reservation.DeleteOne(Builders<Reservation>.Filter.Eq("Id", id));
                     }
                 }
             }
-
-            //_logger.LogInformation("finish check");
+            _logger.LogInformation("finish check");
         }
         
         public async Task<string> VerifyReservationId(VerificationReservationId verification)
@@ -276,6 +216,16 @@ namespace BookingService.BookingService
             var err = JsonConvert.SerializeObject(errorSend);
 
             return err;
+        }
+
+        public async Task ChangeStatus(Payment payment)
+        {
+            var filter = Builders<Reservation>.Filter.Eq("Id", payment.ReservationId);
+            var reservation = _reservation.Find(filter).FirstOrDefault();
+            reservation.Status = Status.Paid;
+
+            _reservation.ReplaceOne(filter, reservation);
+
         }
     }
 }

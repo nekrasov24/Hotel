@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RoomService.Subscriber
+namespace BookingService.Model
 {
-    public interface ISubscriber
+    public enum Status
     {
-
-
-        Task SubscribeVerificationRoomId();
+        Free = 1,
+        Booked,
+        Paid,
     }
 }

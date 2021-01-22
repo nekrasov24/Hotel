@@ -1,4 +1,5 @@
 ﻿using EasyNetQ;
+using EasyNetQ.Topology;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OrderService.Model;
@@ -43,6 +44,19 @@ namespace OrderService.Publisher
 
 
             return response;
+
+        }
+
+        public async Task PublishPayment(Payment message)
+        {
+            var queueExhange = nameof(Payment);
+            var queue2 = _bus.QueueDeclare(queueExhange);
+            var exchange = _bus.ExchangeDeclare(queueExhange, ExchangeType.Topic);
+            _bus.Bind(exchange, queue2, "A.*");
+
+            var topic = $"ProjectId.CabinId";
+            var yourMessage = new Message<string>(JsonConvert.SerializeObject(message));
+            await _bus.PublishAsync(exchange, "A.*", true, yourMessage);
 
         }
     }

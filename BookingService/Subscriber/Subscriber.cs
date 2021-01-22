@@ -68,6 +68,24 @@ namespace BookingService.Subscriber
             return mes.ToString();
         }
 
+        public void SubscribePayment()
+        {
+            var queue = _bus.QueueDeclare("Payment");
+
+            _bus.Consume<string>(queue, async (msg, info) =>
+            {
+                using var serviceScope = _pr.GetRequiredService<IServiceScopeFactory>().CreateScope();
+                var bookingService = serviceScope.ServiceProvider.GetService<IBookingService>();
+                await bookingService.ChangeStatus(DeserializePayment(msg.Body));
+            });
+        }
+
+        private Payment DeserializePayment(string bodyMessage)
+        {
+            var message = JsonConvert.DeserializeObject<Payment>(bodyMessage);
+            return message;
+        }
+
 
     }
 }

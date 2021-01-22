@@ -36,6 +36,9 @@ namespace BookingService.Model
         public int NumberOfNights { get; set; }
         [BsonElement("AmountPaid")]
         [BsonRepresentation(BsonType.String)]
-        public Decimal AmountPaid { get; set; }
+        public decimal AmountPaid { get; set; }
+        [BsonElement("Status")]
+        [BsonRepresentation(BsonType.String)]
+        public  Status Status { get; set; }
     }
 }

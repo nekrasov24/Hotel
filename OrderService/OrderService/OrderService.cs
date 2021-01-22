@@ -77,19 +77,23 @@ namespace OrderService.OrderService
                     throw new Exception(message);
                 }
 
-                //var dateOfPayment = DateTime.UtcNow;
-                //var newOrder = new Order()
-                //{
-                //    Id = Guid.NewGuid(),
-                //    UserId = userId,
-                //    RoomId = receiveReservation.RoomId,
-                //    ReservStartDate = receiveReservation.ReservStartDate,
-                //    ReservFinishDate = receiveReservation.ReservFinishedDate,
-                //    DateOfPayment = dateOfPayment,
-                //    AmountPaid = receiveReservation.AmountPaid,
-                //};
+                var dateOfPayment = DateTime.UtcNow;
+                var newOrder = new Order()
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = userId,
+                    RoomId = receiveReservation.RoomId,
+                    ReservStartDate = receiveReservation.ReservStartDate,
+                    ReservFinishDate = receiveReservation.ReservFinishedDate,
+                    DateOfPayment = dateOfPayment,
+                    AmountPaid = receiveReservation.AmountPaid,
+                };
 
-                //await _orderRepository.AddOrderAsync(newOrder);
+                await _orderRepository.AddOrderAsync(newOrder);
+
+                var payment = new Payment() { ReservationId = model.ReservationId.ToString() };
+
+                await _publisher.PublishPayment(payment);
 
                 return message;
             }

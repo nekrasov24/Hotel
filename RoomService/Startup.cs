@@ -60,9 +60,8 @@ namespace RoomService
         {
             roomContext.Database.Migrate();
 
-            subscriber.Subscribe();
             await subscriber.SubscribeVerificationRoomId();
-            subscriber.SubscribeCancel();
+
             //await subscriber.SubscribeGetPriceForNight();
 
             if (env.IsDevelopment())

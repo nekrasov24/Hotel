@@ -9,6 +9,7 @@ namespace BookingService.Subscriber
     {
         void SubscribeJobMessage();
         Task SubscribeVerificationReservationId();
+        void SubscribePayment();
 
     }
 }

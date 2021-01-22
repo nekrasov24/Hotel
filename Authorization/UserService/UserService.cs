@@ -192,8 +192,6 @@ namespace Authorization.UserService
             try
             {
                 var userId = Guid.Parse(model.UserId);
-
-
                 var amountPaid = Convert.ToDecimal(model.AmountPaid);
 
                 var findUser = _userRepository.GetUserById(userId);

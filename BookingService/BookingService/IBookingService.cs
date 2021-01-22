@@ -13,5 +13,6 @@ namespace BookingService.BookingService
         IEnumerable<ReservationDTO> GetReservation();
         Task CheckReservation(JobMessage message);
         Task<string> VerifyReservationId(VerificationReservationId verification);
+        Task ChangeStatus(Payment payment);
     }
 }

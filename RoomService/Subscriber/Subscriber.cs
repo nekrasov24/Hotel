@@ -25,16 +25,7 @@ namespace RoomService.Subscriber
             _logger = logger;
         }
 
-        public void Subscribe()
-        {
-            var queue = _bus.QueueDeclare("TransferReservation");
 
-            _bus.Consume<string>(queue, async(msg, info) => {
-                using var serviceScope = _pr.GetRequiredService<IServiceScopeFactory>().CreateScope();
-                var roomService = serviceScope.ServiceProvider.GetService<IRoomService>();
-                await roomService.ChangeStatus(DeserializeTest(msg.Body));
-            });
-        }
 
         public async Task SubscribeVerificationRoomId()
         {
@@ -42,24 +33,9 @@ namespace RoomService.Subscriber
                c => c.WithQueueName(nameof(VerificationRoomId)));
         }
 
-        /*public async Task SubscribeGetPriceForNight()
-        {
-            await _rpcBus.Rpc.RespondAsync<string, string>(async (responseString, token) => await DeserializeGetPrice(responseString),
-                c => c.WithQueueName(nameof(Price)));
-        }*/
 
 
-        public void SubscribeCancel()
-        {
-            var queue = _bus.QueueDeclare("CancelReservation");
 
-            _bus.Consume<string>(queue, async (msg, info) =>
-            {
-                using var serviceScope = _pr.GetRequiredService<IServiceScopeFactory>().CreateScope();
-                var roomService = serviceScope.ServiceProvider.GetService<IRoomService>();
-                await roomService.ChangeStatusToFree(DeserializeCancel(msg.Body));
-            });
-        }
 
 
         private TransferReservation DeserializeTest(string bodyMessage)
@@ -68,11 +44,7 @@ namespace RoomService.Subscriber
             return message;
         }
 
-        private CancelReservation DeserializeCancel(string bodyMessage)
-        {
-            var message = JsonConvert.DeserializeObject<CancelReservation>(bodyMessage);
-            return message;
-        }
+
 
         private async Task<string> DeserializeVerify(string bodyMessage)
         {
@@ -87,17 +59,5 @@ namespace RoomService.Subscriber
             return mes.ToString();
         }
 
-        /*private async Task<string> DeserializeGetPrice(string bodyMessage)
-        {
-            var message = JsonConvert.DeserializeObject<Price>(bodyMessage);
-            var mess = message.PriceForNight;
-            using var serviceScope = _pr.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            var roomService = serviceScope.ServiceProvider.GetService<IRoomService>();
-            var mes = roomService.GetPrice(mess);
-
-            _logger.LogWarning($"logger readed {message}");
-
-            return mes.ToString();
-        }*/
     }
 }
